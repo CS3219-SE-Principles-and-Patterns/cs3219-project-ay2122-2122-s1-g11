@@ -11,6 +11,9 @@
 # production
 /build
 
+# env files
+/services/knexfile.js
+
 # misc
 .DS_Store
 .env.local
