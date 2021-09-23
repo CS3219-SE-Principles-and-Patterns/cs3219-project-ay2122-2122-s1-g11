@@ -9,7 +9,6 @@ module.exports = {
 
     // GET RANDOM EASY QUESTION
     getEasyQuestion(req, res, next) {
-        // TODO
         Questions.getRandomEasy()
             .then((data) => res.status(200).json({ success: true, questions: data }))
             .catch((err) => res.status(400).json({ err }));
@@ -17,39 +16,36 @@ module.exports = {
 
     // GET RANDOM MEDIUM QUESTION
     getMediumQuestion(req, res, next) {
-        // TODO
-        Questions.get()
+        Questions.getRandomMedium()
             .then((data) => res.status(200).json({ success: true, questions: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
     // GET RANDOM HARD QUESTION
     getHardQuestion(req, res, next) {
-        // TODO
-        Questions.get()
+        Questions.getRandomHard()
             .then((data) => res.status(200).json({ success: true, questions: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
     // GET EASY CATEGORY
     getEasyCategory(req, res, next) {
-        // TODO
         Questions.getEasyCategory()
-            .then((data) => res.status(200).json({ success: true, questions: data }))
+            .then((data) => res.status(200).json({ success: true, categories: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
     // GET MEDIUM CATEGORY
     getMediumCategory(req, res, next) {
         Questions.getMediumCategory()
-            .then((data) => res.status(200).json({ success: true, questions: data }))
+            .then((data) => res.status(200).json({ success: true, categories: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
     // GET HARD CATEGORY
     getHardCategory(req, res, next) {
         Questions.getHardCategory()
-            .then((data) => res.status(200).json({ success: true, questions: data }))
+            .then((data) => res.status(200).json({ success: true, categories: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
@@ -71,7 +67,13 @@ module.exports = {
         let id = req.params.id;
 
         Questions.update(difficulty, category, question, link, id)
-            .then(() => res.status(200).json({ success: true, msg: `Question #${id} updated` }))
+            .then((response) => {
+                if (!response || response.length === 0) {
+                    res.status(400).json("Error updating the question. The id might not exist.");
+                } else {
+                    res.status(200).json({ success: true, msg: `Question #${id} updated` });
+                }
+            })
             .catch((err) => res.status(400).json({ err }));
     },
 
@@ -80,7 +82,16 @@ module.exports = {
         let id = req.params.id;
 
         Questions.delete(id)
-            .then(() => res.status(200).json({ success: true, msg: `Question #${id} deleted` }))
+            .then((response) => {
+                if (response === 1) {
+                    res.status(200).json({ success: true, msg: `Question #${id} deleted` });
+                } else {
+                    res.status(400).json({
+                        success: false,
+                        msg: "Failed deletion, the id might be invalid.",
+                    });
+                }
+            })
             .catch((err) => res.status(400).json({ err }));
     },
 };

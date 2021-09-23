@@ -78,7 +78,7 @@ Question.getHardCategory = () => {
         .groupBy("category");
 };
 
-// UPDATE AN ARTICLE
+// UPDATE AN QUESTION
 Question.update = (difficulty, category, question, link, id) => {
     return database("questions").where("id", id).returning("*").update({
         difficulty: difficulty,
@@ -88,7 +88,7 @@ Question.update = (difficulty, category, question, link, id) => {
     });
 };
 
-// DELETE AN ARTICLE
+// DELETE A QUESTION
 Question.delete = (id) => {
     return database("questions").where("id", id).del();
 };
