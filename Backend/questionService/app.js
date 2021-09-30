@@ -1,3 +1,4 @@
+// Setup
 const express = require("express");
 const bodyParser = require("body-parser");
 
@@ -16,3 +17,10 @@ app.use(function (req, res, next) {
     res.setHeader("Access-Control-Request-Method", "GET, POST, PUT, DELETE");
     next();
 });
+
+//Routes
+const questionRoutes = require("./routes/questions");
+
+app.use("/questions", questionRoutes);
+
+module.exports = app;
