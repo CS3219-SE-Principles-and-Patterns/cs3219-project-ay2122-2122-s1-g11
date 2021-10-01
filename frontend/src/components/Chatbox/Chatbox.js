@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Chatbox = ({ socket, roomNo }) => {
 
     const [chatMessages, setChatMessages] = useState([]);
     const [chatBoxText, setChatBoxText] = useState('');
+    const messagesEndRef = useRef(null);
+
+    const scrollToView = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     useEffect(() => {
         socket.on('chat_new_message', ({ message }) => {
@@ -16,6 +21,10 @@ const Chatbox = ({ socket, roomNo }) => {
             ]);
         });
     }, [socket]);
+
+    useEffect(() => {
+        if (chatMessages.length > 0) scrollToView();
+    }, [chatMessages]);
     
     const onMessageSend = () => {
         socket.emit('chat_send_message', { roomNo, message: chatBoxText });
@@ -36,7 +45,8 @@ const Chatbox = ({ socket, roomNo }) => {
     return (
         <>
             <h1>Chat Room</h1>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '300px', overflow: 'auto', backgroundColor: '#F7F7F7' }}>
+            <div 
+                style={{ display: 'flex', flexDirection: 'column', height: '300px', overflow: 'auto', backgroundColor: '#F7F7F7' }}>
                 {
                     chatMessages.map(message => {
                         if (message.type === 'send') {
@@ -50,6 +60,7 @@ const Chatbox = ({ socket, roomNo }) => {
                         }
                     })
                 }
+                <div ref={messagesEndRef}></div>
             </div>
             <input 
                 type="text" 
