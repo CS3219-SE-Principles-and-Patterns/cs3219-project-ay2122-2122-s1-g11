@@ -49,4 +49,10 @@ io.on('connection', (socket) => {
     socket.on('room', (room) => {
         console.log(room);
     });
+
+    // chat 
+    socket.on('chat_send_message', ({ roomNo, message }) => {
+        console.log(message);
+        socket.to(roomNo).emit('chat_new_message', { message });
+    });
 });

@@ -5,6 +5,8 @@ import io from 'socket.io-client';
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 
+import ChatRoom from '../Chatbox/Chatbox';
+
 const socket = io.connect('localhost:5000');
 
 const TextEditor = () => {
@@ -18,9 +20,7 @@ const TextEditor = () => {
     }, []);
 
     useEffect(() => {
-        console.log("change in socket");
-        socket.on('message', ({ roomNo, editorText }) => {
-            console.log(editorText);
+        socket.on('message', ({ editorText }) => {
             setText(editorText);
         });
     }, [socket]);
@@ -59,6 +59,10 @@ const TextEditor = () => {
             onChange={textChange}
             style={{ width: '100%', fontSize: 14 }}
             value={text} /> }
+
+        {roomNo && submitted && <ChatRoom 
+            socket={socket}
+            roomNo={roomNo} />}
         </>
     )
 };
