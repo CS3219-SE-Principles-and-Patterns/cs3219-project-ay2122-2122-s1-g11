@@ -42,7 +42,7 @@ jobs:
 
         defaults:
             run:
-                working-directory: ./Backend/questionService
+                working-directory: ./backend/questionService
 
         steps:
             - uses: actions/checkout@v2
@@ -51,7 +51,7 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "npm"
-                  cache-dependency-path: Backend/questionService/package-lock.json
+                  cache-dependency-path: backend/questionService/package-lock.json
             - run: npm ci
             - run: npm run build --if-present
             - run: npm install -g db-migrate
