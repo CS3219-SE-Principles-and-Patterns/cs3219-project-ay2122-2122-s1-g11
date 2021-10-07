@@ -54,8 +54,15 @@ module.exports = {
         // USE BODY PARSER TO EXTRACT DATA FROM CLIENT
         const { difficulty, category, question, link } = req.body;
 
+        if (!difficulty || !category || !question) {
+            res.status(400).json("One of required field is empty.");
+            return;
+        }
+
         Questions.create(difficulty, category, question, link)
-            .then(() => res.status(201).json({ success: true, msg: "Question created" }))
+            .then(() => {
+                res.status(201).json({ success: true, msg: "Question created" });
+            })
             .catch((err) => res.status(400).json({ err }));
     },
 
@@ -69,7 +76,10 @@ module.exports = {
         Questions.update(difficulty, category, question, link, id)
             .then((response) => {
                 if (!response || response.length === 0) {
-                    res.status(400).json("Error updating the question. The id might not exist.");
+                    res.status(400).json({
+                        success: false,
+                        msg: "Error updating the question. The id might not exist.",
+                    });
                 } else {
                     res.status(200).json({ success: true, msg: `Question #${id} updated` });
                 }
