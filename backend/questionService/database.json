@@ -2,7 +2,7 @@
     "dev": {
         "driver": "pg",
         "user": "postgres",
-        "password": "test",
+        "password": "postgres",
         "host": "localhost",
         "database": "postgres"
     }
