@@ -137,6 +137,7 @@ describe("Queries", function () {
                 .end((err, res) => {
                     res.status.should.equal(400);
                     res.type.should.equal("application/json");
+                    res.body.should.equal("One of required field is empty.");
                     done();
                 });
         });
