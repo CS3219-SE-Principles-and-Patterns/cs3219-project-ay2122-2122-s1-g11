@@ -120,27 +120,27 @@ describe("Queries", function () {
                 .end((err, res) => {
                     res.status.should.equal(201);
                     res.type.should.equal("application/json");
-                    res.body.msg.should.equal("Question created");
+                    res.body.should.equal("Question created");
                     done();
                 });
         });
 
-        // it("Should return that the question creation fails", function (done) {
-        //     chai.request(app)
-        //         .post("/questions/add")
-        //         .send({
-        //             difficulty: DIFFICULTY.easy,
-        //             category: CATEGORY.array,
-        //             question: "",
-        //             externallink: "",
-        //         })
-        //         .end((err, res) => {
-        //             res.status.should.equal(404);
-        //             console.log(res.body);
-        //             res.type.should.equal("application/json");
-        //             done();
-        //         });
-        // });
+        it("Should return that the question creation fails", function (done) {
+            chai.request(app)
+                .post("/questions/add")
+                .send({
+                    difficulty: DIFFICULTY.easy,
+                    category: CATEGORY.array,
+                    question: "",
+                    externallink: "",
+                })
+                .end((err, res) => {
+                    res.status.should.equal(400);
+                    res.type.should.equal("application/json");
+                    res.body.should.equal("One of required field is empty.");
+                    done();
+                });
+        });
     });
 
     describe("Delete Question", function () {
@@ -151,14 +151,26 @@ describe("Queries", function () {
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
-                    res.body.msg.should.equal(`Question #${id} deleted`);
+                    res.body.should.equal(`Question #${id} deleted`);
+                    done();
+                });
+        });
+
+        it("Should return that the question fails to delete", function (done) {
+            id = 100;
+            chai.request(app)
+                .delete(`/questions/delete/${id}`)
+                .end((err, res) => {
+                    res.status.should.equal(400);
+                    res.type.should.equal("application/json");
+                    res.body.should.equal("Failed deletion, the id might be invalid.");
                     done();
                 });
         });
     });
 
     describe("Update Question", function () {
-        it("Should return that the application is running", function (done) {
+        it("Should return that the question is updated", function (done) {
             id = 2;
             chai.request(app)
                 .put(`/questions/update/${id}`)
@@ -171,7 +183,25 @@ describe("Queries", function () {
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
-                    res.body.msg.should.equal(`Question #${id} updated`);
+                    res.body.should.equal(`Question #${id} updated`);
+                    done();
+                });
+        });
+
+        it("Should return that the question fails to update", function (done) {
+            id = 100;
+            chai.request(app)
+                .put(`/questions/update/${id}`)
+                .send({
+                    difficulty: DIFFICULTY.easy,
+                    category: CATEGORY.array,
+                    question: "Edited question",
+                    externallink: "",
+                })
+                .end((err, res) => {
+                    res.status.should.equal(400);
+                    res.type.should.equal("application/json");
+                    res.body.should.equal("Error updating the question. The id might not exist.");
                     done();
                 });
         });

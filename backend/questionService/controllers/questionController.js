@@ -10,42 +10,42 @@ module.exports = {
     // GET RANDOM EASY QUESTION
     getEasyQuestion(req, res, next) {
         Questions.getRandomEasy()
-            .then((data) => res.status(200).json({ success: true, questions: data }))
+            .then((data) => res.status(200).json({ questions: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
     // GET RANDOM MEDIUM QUESTION
     getMediumQuestion(req, res, next) {
         Questions.getRandomMedium()
-            .then((data) => res.status(200).json({ success: true, questions: data }))
+            .then((data) => res.status(200).json({ questions: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
     // GET RANDOM HARD QUESTION
     getHardQuestion(req, res, next) {
         Questions.getRandomHard()
-            .then((data) => res.status(200).json({ success: true, questions: data }))
+            .then((data) => res.status(200).json({ questions: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
     // GET EASY CATEGORY
     getEasyCategory(req, res, next) {
         Questions.getEasyCategory()
-            .then((data) => res.status(200).json({ success: true, categories: data }))
+            .then((data) => res.status(200).json({ categories: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
     // GET MEDIUM CATEGORY
     getMediumCategory(req, res, next) {
         Questions.getMediumCategory()
-            .then((data) => res.status(200).json({ success: true, categories: data }))
+            .then((data) => res.status(200).json({ categories: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
     // GET HARD CATEGORY
     getHardCategory(req, res, next) {
         Questions.getHardCategory()
-            .then((data) => res.status(200).json({ success: true, categories: data }))
+            .then((data) => res.status(200).json({ categories: data }))
             .catch((err) => res.status(400).json({ err }));
     },
 
@@ -54,8 +54,15 @@ module.exports = {
         // USE BODY PARSER TO EXTRACT DATA FROM CLIENT
         const { difficulty, category, question, link } = req.body;
 
+        if (!difficulty || !category || !question) {
+            res.status(400).json("One of required field is empty.");
+            return;
+        }
+
         Questions.create(difficulty, category, question, link)
-            .then(() => res.status(201).json({ success: true, msg: "Question created" }))
+            .then(() => {
+                res.status(201).json("Question created");
+            })
             .catch((err) => res.status(400).json({ err }));
     },
 
@@ -71,7 +78,7 @@ module.exports = {
                 if (!response || response.length === 0) {
                     res.status(400).json("Error updating the question. The id might not exist.");
                 } else {
-                    res.status(200).json({ success: true, msg: `Question #${id} updated` });
+                    res.status(200).json(`Question #${id} updated`);
                 }
             })
             .catch((err) => res.status(400).json({ err }));
@@ -84,12 +91,9 @@ module.exports = {
         Questions.delete(id)
             .then((response) => {
                 if (response === 1) {
-                    res.status(200).json({ success: true, msg: `Question #${id} deleted` });
+                    res.status(200).json(`Question #${id} deleted`);
                 } else {
-                    res.status(400).json({
-                        success: false,
-                        msg: "Failed deletion, the id might be invalid.",
-                    });
+                    res.status(400).json("Failed deletion, the id might be invalid.");
                 }
             })
             .catch((err) => res.status(400).json({ err }));
