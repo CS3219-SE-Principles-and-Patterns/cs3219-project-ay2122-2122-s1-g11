@@ -120,7 +120,7 @@ describe("Queries", function () {
                 .end((err, res) => {
                     res.status.should.equal(201);
                     res.type.should.equal("application/json");
-                    res.body.msg.should.equal("Question created");
+                    res.body.should.equal("Question created");
                     done();
                 });
         });
@@ -151,7 +151,7 @@ describe("Queries", function () {
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
-                    res.body.msg.should.equal(`Question #${id} deleted`);
+                    res.body.should.equal(`Question #${id} deleted`);
                     done();
                 });
         });
@@ -163,7 +163,7 @@ describe("Queries", function () {
                 .end((err, res) => {
                     res.status.should.equal(400);
                     res.type.should.equal("application/json");
-                    res.body.msg.should.equal("Failed deletion, the id might be invalid.");
+                    res.body.should.equal("Failed deletion, the id might be invalid.");
                     done();
                 });
         });
@@ -183,7 +183,7 @@ describe("Queries", function () {
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
-                    res.body.msg.should.equal(`Question #${id} updated`);
+                    res.body.should.equal(`Question #${id} updated`);
                     done();
                 });
         });
@@ -201,9 +201,7 @@ describe("Queries", function () {
                 .end((err, res) => {
                     res.status.should.equal(400);
                     res.type.should.equal("application/json");
-                    res.body.msg.should.equal(
-                        "Error updating the question. The id might not exist."
-                    );
+                    res.body.should.equal("Error updating the question. The id might not exist.");
                     done();
                 });
         });
