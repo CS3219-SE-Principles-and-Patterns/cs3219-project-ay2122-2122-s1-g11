@@ -34,15 +34,6 @@ const SelectCategory = ({ onSelect, categories }) => {
     return (
         <div>
             <h2>Please select the category that you want to practice on</h2>
-            {/* <Button variant="outlined" onClick={onSelect} value="string">
-                String
-            </Button>
-            <Button variant="outlined" color="primary" onClick={onSelect} value="array">
-                Array
-            </Button>
-            <Button variant="outlined" color="secondary" onClick={onSelect} value="others">
-                Others
-            </Button> */}
             {categoryArray}
         </div>
     );
