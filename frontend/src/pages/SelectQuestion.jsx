@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import { getCategoiesAPI, getRandomQuestionAPI } from "../api/questionService";
 import SelectCategory from "../components/QuestionSelection/SelectCategory";
 import SelectDifficulty from "../components/QuestionSelection/SelectDifficulty";
 
@@ -8,27 +9,50 @@ class SelectQuestion extends Component {
         super(props);
         this.state = {
             difficultySelected: "",
+            categories: [],
             categorySelected: "",
         };
     }
 
     onDifficultySelect = (event) => {
-        // window.localStorage.setItem("difficultySelected", "difficulty");
-        const value = event.target.innerText.toLowerCase();
-        this.setState({ difficultySelected: value });
+        const difficulty = event.target.innerText.toLowerCase();
+        this.getCategories(difficulty);
+        this.setState({ difficultySelected: difficulty });
     };
 
-    onCategorySelect = (event) => {
-        // window.localStorage.setItem("categorySelect", "category");
-        const value = event.target.innerText.toLowerCase();
-        this.setState({ categorySelected: value });
+    onCategorySelect = async (event) => {
+        const category = event.target.innerText.toLowerCase();
+        this.getRandomQuestion(category);
+        this.setState({ categorySelected: category });
+    };
+
+    getCategories = async (difficulty) => {
+        const result = await getCategoiesAPI(difficulty);
+        if (result.status === 200) {
+            const categories = result.data.categories;
+            this.setState({ categories: categories });
+        } else {
+            // TODO: Change to alert message in the future
+            window.alert("Error connecting to the API");
+        }
+    };
+
+    getRandomQuestion = async (category) => {
+        const result = await getRandomQuestionAPI(this.state.difficultySelected, category);
+        if (result.status === 200) {
+            const question = result.data.questions[0];
+            console.log(question);
+        } else {
+            // TODO: Change to alert message in the future
+            window.alert("Error connecting to the API");
+        }
     };
 
     render() {
-        const { difficultySelected, categorySelected } = this.state;
+        const { difficultySelected, categories, categorySelected } = this.state;
 
         const SelectType = difficultySelected ? (
-            <SelectCategory onSelect={this.onCategorySelect} />
+            <SelectCategory onSelect={this.onCategorySelect} categories={categories} />
         ) : (
             <SelectDifficulty onSelect={this.onDifficultySelect} />
         );
@@ -38,12 +62,7 @@ class SelectQuestion extends Component {
             this.setState({ difficultySelected: "", categorySelected: "" });
         }
 
-        return (
-            <div>
-                <h2>Please select the difficulty of your questions</h2>
-                {SelectType}
-            </div>
-        );
+        return <div>{SelectType}</div>;
     }
 }
 
