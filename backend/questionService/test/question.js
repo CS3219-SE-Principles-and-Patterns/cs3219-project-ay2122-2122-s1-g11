@@ -26,6 +26,7 @@ describe("Queries", function () {
         it("Should return that the EASY question is SUCCESSFULLY received", function (done) {
             chai.request(app)
                 .get(`/questions/${DIFFICULTY.easy}`)
+                .query({ category: CATEGORY.array })
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
@@ -40,6 +41,7 @@ describe("Queries", function () {
         it("Should return that the MEDIUM question is SUCCESSFULLY received", function (done) {
             chai.request(app)
                 .get(`/questions/${DIFFICULTY.medium}`)
+                .query({ category: CATEGORY.trees })
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
@@ -54,6 +56,7 @@ describe("Queries", function () {
         it("Should return that the HARD question is SUCCESSFULLY received", function (done) {
             chai.request(app)
                 .get(`/questions/${DIFFICULTY.hard}`)
+                .query({ category: CATEGORY.dp })
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
