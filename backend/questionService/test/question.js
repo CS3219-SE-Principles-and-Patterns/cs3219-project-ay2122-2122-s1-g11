@@ -72,7 +72,7 @@ describe("Queries", function () {
     describe("Get Category", function () {
         it("Should return that the EASY question CATEGORY is SUCCESSFULLY received", function (done) {
             chai.request(app)
-                .get(`/questions/${DIFFICULTY.easy}/category`)
+                .get(`/questions/category/${DIFFICULTY.easy}`)
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
@@ -85,7 +85,7 @@ describe("Queries", function () {
 
         it("Should return that the MEDIUM question CATEGORY is SUCCESSFULLY received", function (done) {
             chai.request(app)
-                .get(`/questions/${DIFFICULTY.medium}/category`)
+                .get(`/questions/category/${DIFFICULTY.medium}`)
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
@@ -98,7 +98,7 @@ describe("Queries", function () {
 
         it("Should return that the HARD question CATEGORY is SUCCESSFULLY received", function (done) {
             chai.request(app)
-                .get(`/questions/${DIFFICULTY.hard}/category`)
+                .get(`/questions/category/${DIFFICULTY.hard}`)
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
