@@ -1,4 +1,5 @@
 // REQUIRE MODEL
+const { NO_CATEGORY_MSG, NO_RESULT_MSG } = require("../models/ERRORMSG.js");
 const Questions = require("../models/question.js");
 
 module.exports = {
@@ -9,44 +10,71 @@ module.exports = {
 
     // GET RANDOM EASY QUESTION
     getEasyQuestion(req, res, next) {
-        Questions.getRandomEasy()
-            .then((data) => res.status(200).json({ questions: data }))
-            .catch((err) => res.status(400).json({ err }));
+        category = req.query.category;
+        if (!category) {
+            return res.status(400).json(NO_CATEGORY_MSG);
+        }
+        Questions.getRandomEasy(category)
+            .then((data) => {
+                if (data.length === 0) {
+                    return res.status(400).json(NO_RESULT_MSG);
+                }
+                return res.status(200).json({ questions: data });
+            })
+            .catch((err) => res.status(400).json(err));
     },
 
     // GET RANDOM MEDIUM QUESTION
     getMediumQuestion(req, res, next) {
-        Questions.getRandomMedium()
-            .then((data) => res.status(200).json({ questions: data }))
-            .catch((err) => res.status(400).json({ err }));
+        category = req.query.category;
+        if (!category) {
+            return res.status(400).json(NO_CATEGORY_MSG);
+        }
+        Questions.getRandomMedium(category)
+            .then((data) => {
+                if (data.length === 0) {
+                    return res.status(400).json(NO_RESULT_MSG);
+                }
+                return res.status(200).json({ questions: data });
+            })
+            .catch((err) => res.status(400).json(err));
     },
 
     // GET RANDOM HARD QUESTION
     getHardQuestion(req, res, next) {
-        Questions.getRandomHard()
-            .then((data) => res.status(200).json({ questions: data }))
-            .catch((err) => res.status(400).json({ err }));
+        category = req.query.category;
+        if (!category) {
+            return res.status(400).json(NO_CATEGORY_MSG);
+        }
+        Questions.getRandomHard(category)
+            .then((data) => {
+                if (data.length === 0) {
+                    return res.status(400).json(NO_RESULT_MSG);
+                }
+                return res.status(200).json({ questions: data });
+            })
+            .catch((err) => res.status(400).json(err));
     },
 
     // GET EASY CATEGORY
     getEasyCategory(req, res, next) {
         Questions.getEasyCategory()
             .then((data) => res.status(200).json({ categories: data }))
-            .catch((err) => res.status(400).json({ err }));
+            .catch((err) => res.status(400).json(err));
     },
 
     // GET MEDIUM CATEGORY
     getMediumCategory(req, res, next) {
         Questions.getMediumCategory()
             .then((data) => res.status(200).json({ categories: data }))
-            .catch((err) => res.status(400).json({ err }));
+            .catch((err) => res.status(400).json(err));
     },
 
     // GET HARD CATEGORY
     getHardCategory(req, res, next) {
         Questions.getHardCategory()
             .then((data) => res.status(200).json({ categories: data }))
-            .catch((err) => res.status(400).json({ err }));
+            .catch((err) => res.status(400).json(err));
     },
 
     // CREATE QUESTION
@@ -63,7 +91,7 @@ module.exports = {
             .then(() => {
                 res.status(201).json("Question created");
             })
-            .catch((err) => res.status(400).json({ err }));
+            .catch((err) => res.status(400).json(err));
     },
 
     // UPDATE QUESTION
@@ -81,7 +109,7 @@ module.exports = {
                     res.status(200).json(`Question #${id} updated`);
                 }
             })
-            .catch((err) => res.status(400).json({ err }));
+            .catch((err) => res.status(400).json(err));
     },
 
     // DELETE QUESTION
@@ -96,6 +124,6 @@ module.exports = {
                     res.status(400).json("Failed deletion, the id might be invalid.");
                 }
             })
-            .catch((err) => res.status(400).json({ err }));
+            .catch((err) => res.status(400).json(err));
     },
 };
