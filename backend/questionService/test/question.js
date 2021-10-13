@@ -34,6 +34,7 @@ describe("Queries", function () {
                     should.equal(res.body.questions.length, 1);
                     should.exist(question);
                     should.equal(question.difficulty, DIFFICULTY.easy);
+                    should.equal(question.category, CATEGORY.array);
                     done();
                 });
         });
@@ -49,6 +50,7 @@ describe("Queries", function () {
                     should.equal(res.body.questions.length, 1);
                     should.exist(question);
                     should.equal(question.difficulty, DIFFICULTY.medium);
+                    should.equal(question.category, CATEGORY.trees);
                     done();
                 });
         });
@@ -64,6 +66,7 @@ describe("Queries", function () {
                     should.equal(res.body.questions.length, 1);
                     should.exist(question);
                     should.equal(question.difficulty, DIFFICULTY.hard);
+                    should.equal(question.category, CATEGORY.dp);
                     done();
                 });
         });
