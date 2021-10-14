@@ -8,6 +8,10 @@ module.exports = (sequelize, Sequelize) => {
       },
       password: {
         type: Sequelize.STRING
+      }, 
+      resetLink: {
+        type: Sequelize.STRING, 
+        default: ''
       }
     });
     return User;
