@@ -10,14 +10,20 @@ module.exports = function(app) {
     next();
   });
 
-  app.post(
-    "/api/auth/register",
-    [
-      verifyRegister.checkDuplicateUsernameOrEmail,
-      verifyRegister.checkRolesExisted
-    ],
-    controller.register
-  );
+app.post(
+  "/api/auth/register",
+  [
+    verifyRegister.checkDuplicateUsernameOrEmail,
+    verifyRegister.checkRolesExisted, 
+    verifyRegister.passwordvalidation
+  ], controller.register
+);
 
-  app.post("/api/auth/login", controller.login);
+app.post("/api/auth/login", controller.login);
+
+app.post("/api/auth/logout", [verifyRegister.verifyToken], controller.logout); 
+
+app.patch("/api/auth/forgotPassword", controller.forgotPassword); 
+
+app.put("/api/auth/resetPassword",[verifyRegister.passwordvalidation], controller.resetPassword);
 };
