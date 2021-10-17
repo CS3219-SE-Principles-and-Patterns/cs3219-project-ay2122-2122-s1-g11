@@ -41,7 +41,13 @@ router.post('/', function(req, res) {
       redisClient.del('matched' + key);
       return res.json({ matchStatus: "success", matchId: obj.lobbyId, parterId: obj.userId });
     } else {
-      return res.json({ matchStatus: "waiting" });
+      redisClient.get(key, (error, value1) => {
+        if (key) {
+          return res.json({ matchStatus: "waiting" });
+        } else {
+          return res.json({ matchStatus: "failed" });
+        }
+      })
     }
   })
 })
