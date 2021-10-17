@@ -1,0 +1,3 @@
+db-migrate down
+db-migrate up
+npm test

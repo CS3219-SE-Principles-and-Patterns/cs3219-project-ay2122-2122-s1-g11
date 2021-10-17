@@ -21,12 +21,13 @@ Question.get = () => {
     return database.select("*").from("questions");
 };
 
-// GET ALL EASY QUESTIONS
-Question.getRandomEasy = () => {
+// GET A RANDODM EASY QUESTIONS
+Question.getRandomEasy = (category) => {
     return database
         .select("*")
         .from("questions")
         .where("difficulty", "easy")
+        .andWhere("category", category)
         .orderByRaw("RANDOM()")
         .limit(1);
 };
@@ -40,12 +41,13 @@ Question.getEasyCategory = () => {
         .groupBy("category");
 };
 
-// GET ALL MEDIUM QUESTIONS
-Question.getRandomMedium = () => {
+// GET A RANDODM MEDIUM QUESTIONS
+Question.getRandomMedium = (category) => {
     return database
         .select("*")
         .from("questions")
         .where("difficulty", "medium")
+        .andWhere("category", category)
         .orderByRaw("RANDOM()")
         .limit(1);
 };
@@ -59,12 +61,13 @@ Question.getMediumCategory = () => {
         .groupBy("category");
 };
 
-// GET ALL HARD QUESTIONS
-Question.getRandomHard = () => {
+// GET A RANDODM HARD QUESTIONS
+Question.getRandomHard = (category) => {
     return database
         .select("*")
         .from("questions")
         .where("difficulty", "hard")
+        .andWhere("category", category)
         .orderByRaw("RANDOM()")
         .limit(1);
 };
