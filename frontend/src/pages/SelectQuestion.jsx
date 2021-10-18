@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { getCategoiesAPI, getRandomQuestionAPI } from "../api/questionService";
+import { getCategoriesAPI, getRandomQuestionAPI } from "../api/questionService";
+import ErrorAlert from "../components/Others/ErrorAlert";
 import SelectCategory from "../components/QuestionSelection/SelectCategory";
 import SelectDifficulty from "../components/QuestionSelection/SelectDifficulty";
+import ErrorMsgs from "../constants/ErrorMsgs";
 
 class SelectQuestion extends Component {
     constructor(props) {
@@ -11,6 +13,8 @@ class SelectQuestion extends Component {
             difficultySelected: "",
             categories: [],
             categorySelected: "",
+            errorMsg: "",
+            errorMsgDisplay: "none",
         };
     }
 
@@ -27,13 +31,17 @@ class SelectQuestion extends Component {
     };
 
     getCategories = async (difficulty) => {
-        const result = await getCategoiesAPI(difficulty);
-        if (result.status === 200) {
-            const categories = result.data.categories;
-            this.setState({ categories: categories });
-        } else {
-            // TODO: Change to alert message in the future
-            window.alert("Error connecting to the API");
+        try {
+            const result = await getCategoriesAPI(difficulty);
+
+            if (result.status === 200 && result.data.categories.length > 0) {
+                const categories = result.data.categories;
+                this.setState({ categories: categories });
+            } else {
+                this.setState({ errorMsg: ErrorMsgs.noCategoryAPI, errorMsgDisplay: "" });
+            }
+        } catch (exception) {
+            this.setState({ errorMsg: ErrorMsgs.noCategoryAPI, errorMsgDisplay: "" });
         }
     };
 
@@ -43,13 +51,13 @@ class SelectQuestion extends Component {
             const question = result.data.questions[0];
             console.log(question);
         } else {
-            // TODO: Change to alert message in the future
-            window.alert("Error connecting to the API");
+            this.setState({ errorMsg: ErrorMsgs.noQuestionAPI, errorMsgDisplay: "" });
         }
     };
 
     render() {
-        const { difficultySelected, categories, categorySelected } = this.state;
+        const { difficultySelected, categories, categorySelected, errorMsg, errorMsgDisplay } =
+            this.state;
 
         const SelectType = difficultySelected ? (
             <SelectCategory onSelect={this.onCategorySelect} categories={categories} />
@@ -62,7 +70,12 @@ class SelectQuestion extends Component {
             this.setState({ difficultySelected: "", categorySelected: "" });
         }
 
-        return <div>{SelectType}</div>;
+        return (
+            <div>
+                <ErrorAlert msg={errorMsg} display={errorMsgDisplay} />
+                {SelectType}
+            </div>
+        );
     }
 }
 
