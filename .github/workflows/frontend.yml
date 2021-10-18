@@ -1,13 +1,13 @@
-name: Collab Service CI/CD Workflow
+name: Frontend CI/CD Workflow
 
 on:
   push:
     paths:
-    - 'backend/collaborationService/**'
+    - 'frontend/**'
 
 jobs:
   deploy: 
-    name: Deploy Collaboration Service to AWS ECR
+    name: Deploy frontend to AWS ECR
     runs-on: ubuntu-latest
 
     steps:
@@ -30,10 +30,10 @@ jobs:
       env:
         ECR_REGISTRY: 852678264376.dkr.ecr.ap-southeast-1.amazonaws.com
         ECR_REPOSITORY: cs3219
-        IMAGE_TAG: collab-service
+        IMAGE_TAG: frontend
       run: |
         # Build a docker container and push it to ECR
-        cd backend/collaborationService
+        cd frontend
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         echo "Pushing image to ECR..."
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collab-service
+spec:
+  selector:
+    matchLabels:
+      run: collab-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: collab-service
+    spec:
+      containers:
+      - name: collab-service
+        image: 852678264376.dkr.ecr.ap-southeast-1.amazonaws.com/cs3219:collab-service
+        ports:
+        - containerPort: 5000
