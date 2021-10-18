@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { getCategoiesAPI, getRandomQuestionAPI } from "../api/questionService";
+import { getCategoriesAPI, getRandomQuestionAPI } from "../api/questionService";
 import ErrorAlert from "../components/Others/ErrorAlert";
 import SelectCategory from "../components/QuestionSelection/SelectCategory";
 import SelectDifficulty from "../components/QuestionSelection/SelectDifficulty";
@@ -32,7 +32,7 @@ class SelectQuestion extends Component {
 
     getCategories = async (difficulty) => {
         try {
-            const result = await getCategoiesAPI(difficulty);
+            const result = await getCategoriesAPI(difficulty);
 
             if (result.status === 200 && result.data.categories.length > 0) {
                 const categories = result.data.categories;

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const qsEndpoint = "http://localhost:3001/questions";
 
-export async function getCategoiesAPI(difficulty) {
+export async function getCategoriesAPI(difficulty) {
     const response = await axios.get(`${qsEndpoint}/category/${difficulty}`);
     return response;
 }
