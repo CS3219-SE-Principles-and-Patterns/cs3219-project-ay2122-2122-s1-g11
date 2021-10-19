@@ -7,7 +7,9 @@ import "ace-builds/src-noconflict/theme-monokai";
 
 import ChatRoom from '../Chatbox/Chatbox';
 
-const socket = io.connect('http://ddf9af43-default-frontendi-3e1f-1481156825.ap-southeast-1.elb.amazonaws.com/socketio');
+const socket = io.connect('http://a3a8c8d99028a4193b8886ba7d66cdc6-978900654.ap-southeast-1.elb.amazonaws.com:5000', {
+    "transports": ['websocket']
+});
 
 const TextEditor = () => {
 
