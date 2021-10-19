@@ -12,7 +12,7 @@ const server = app.listen(5000, () => {
 
 const io = socket(server, {
     cors: {
-        origin: "http://ddf9af43-default-frontendi-3e1f-1481156825.ap-southeast-1.elb.amazonaws.com/",
+        origin: "*",
         methods: ["GET", "POST"]
     }
 });
