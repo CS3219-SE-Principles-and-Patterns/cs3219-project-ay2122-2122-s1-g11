@@ -7,12 +7,12 @@ app.use(express());
 app.use(cors());
 
 const server = app.listen(5000, () => {
-    console.log("Socket.io running on port 5000! CORS as localhost:3000");
+    console.log("Socket.io running on port 5000!");
 });
 
 const io = socket(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "*",
         methods: ["GET", "POST"]
     }
 });
