@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { getCategoiesAPI, getRandomQuestionAPI } from "../api/questionService";
+import { getCategoriesAPI, getRandomQuestionAPI } from "../api/questionService";
+import ErrorAlert from "../components/Others/ErrorAlert";
 import SelectCategory from "../components/QuestionSelection/SelectCategory";
 import SelectDifficulty from "../components/QuestionSelection/SelectDifficulty";
 import LoadingScreen from "../components/QuestionSelection/LoadingScreen";
 import axios from "axios";
+import ErrorMsgs from "../constants/ErrorMsgs";
 
 class SelectQuestion extends Component {
     constructor(props) {
@@ -15,7 +17,9 @@ class SelectQuestion extends Component {
             categorySelected: "",
             loadingState: false,
             userId: null, // update userId to be Id from database
-            intervalId: null
+            intervalId: null,
+            errorMsg: "",
+            errorMsgDisplay: "none",
         };
     }
 
@@ -42,13 +46,17 @@ class SelectQuestion extends Component {
     };
 
     getCategories = async (difficulty) => {
-        const result = await getCategoiesAPI(difficulty);
-        if (result.status === 200) {
-            const categories = result.data.categories;
-            this.setState({ categories: categories });
-        } else {
-            // TODO: Change to alert message in the future
-            window.alert("Error connecting to the API");
+        try {
+            const result = await getCategoriesAPI(difficulty);
+
+            if (result.status === 200 && result.data.categories.length > 0) {
+                const categories = result.data.categories;
+                this.setState({ categories: categories });
+            } else {
+                this.setState({ errorMsg: ErrorMsgs.noCategoryAPI, errorMsgDisplay: "" });
+            }
+        } catch (exception) {
+            this.setState({ errorMsg: ErrorMsgs.noCategoryAPI, errorMsgDisplay: "" });
         }
     };
 
@@ -57,8 +65,7 @@ class SelectQuestion extends Component {
         if (result.status === 200) {
             const question = result.data.questions[0];
         } else {
-            // TODO: Change to alert message in the future
-            window.alert("Error connecting to the API");
+            this.setState({ errorMsg: ErrorMsgs.noQuestionAPI, errorMsgDisplay: "" });
         }
     };
 
@@ -107,7 +114,8 @@ class SelectQuestion extends Component {
     }
 
     render() {
-        const { difficultySelected, categories } = this.state;
+        const { difficultySelected, categories, categorySelected, errorMsg, errorMsgDisplay } =
+            this.state;
 
         const SelectType = difficultySelected ? (
             <SelectCategory onSelect={this.onCategorySelect} categories={categories} />
@@ -116,6 +124,7 @@ class SelectQuestion extends Component {
         );
 
         return (<React.Fragment>
+            <ErrorAlert msg={errorMsg} display={errorMsgDisplay} />
             <div>{SelectType}</div>
             {this.state.loadingState && <LoadingScreen handleClose={() => this.loadingScreenHandleClose()} 
                 open={this.state.loadingState} difficulty={this.state.difficultySelected} category={this.state.categorySelected} />}
