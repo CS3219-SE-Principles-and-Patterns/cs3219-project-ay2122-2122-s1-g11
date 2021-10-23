@@ -5,9 +5,9 @@ name: Question Service CI/CD Workflow
 
 on:
     push:
-        branches: [master, questionService]
-    pull_request:
-        branches: [master, questionService]
+        paths:
+        - 'backend/questionService/**'
+        - '.github/workflows/questionService.yml'
 
 jobs:
     build:
