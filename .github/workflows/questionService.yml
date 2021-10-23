@@ -64,26 +64,26 @@ jobs:
 
         steps:
         - name: Checkout
-        uses: actions/checkout@v2
+          uses: actions/checkout@v2
 
         - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: ap-southeast-1
 
         - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
 
         - name: Build, tag, and push the image to Amazon ECR
-        id: build-image
-        env:
+          id: build-image
+          env:
             ECR_REGISTRY: 852678264376.dkr.ecr.ap-southeast-1.amazonaws.com
             ECR_REPOSITORY: cs3219
             IMAGE_TAG: question-service
-        run: |
+          run: |
             # Build a docker container and push it to ECR
             cd backend/questionService
             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG.${GITHUB_RUN_NUMBER} .
@@ -92,12 +92,12 @@ jobs:
             echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG.${GITHUB_RUN_NUMBER}"
 
         - name: Deploy to AWS EKS                                                                         
-        uses: kodermax/kubectl-aws-eks@master                                                                         
-        env:
+          uses: kodermax/kubectl-aws-eks@master                                                                         
+          env:
             KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
             ECR_REGISTRY: 852678264376.dkr.ecr.ap-southeast-1.amazonaws.com
             ECR_REPOSITORY: cs3219
             IMAGE_TAG: question-service                                                                                                          
             RELEASE_IMAGE: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG.${GITHUB_RUN_NUMBER}
-        with:                                                                                                         
+          with:                                                                                                         
             args: set image deployment/question-deployment question=${{ env.RELEASE_IMAGE }} 
