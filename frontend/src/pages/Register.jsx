@@ -31,18 +31,15 @@ class Login extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleChange(event) {
     this.setState({
       username: event.state.username,
       password: event.state.password,
     });
   }
-
-  async handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
   }
-  
   render() {
     const { classes } = this.props;
     return (
@@ -62,7 +59,7 @@ class Login extends React.Component {
             >
               <Grid item>
                 <Typography component="h1" variant="h5">
-                  Sign in
+                  Sign up
                 </Typography>
               </Grid>
               <Grid item>
@@ -115,8 +112,8 @@ class Login extends React.Component {
                 </form>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  Don't have an account? Create account.
+                <Link href="/login" variant="body2">
+                  Already have an account? Sign in.
                 </Link>
               </Grid>
             </Paper>
