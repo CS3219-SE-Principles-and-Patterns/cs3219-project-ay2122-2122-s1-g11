@@ -4,8 +4,8 @@ module.exports = {
         connection: {
             host: "localhost",
             user: "postgres",
-            password: "postgres",
-            database: "postgres",
+            password: "",
+            database: "cs3219",
         },
     },
     test: {
@@ -16,6 +16,16 @@ module.exports = {
             user: "postgres",
             password: "postgres",
             database: "postgres",
+        },
+    },
+    production: {
+        client: "pg",
+        connection: {
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
         },
     },
 };
