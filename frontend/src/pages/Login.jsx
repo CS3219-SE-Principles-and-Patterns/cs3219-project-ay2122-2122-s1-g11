@@ -29,7 +29,7 @@ const styles = (theme) => ({
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { email: "", password: "", authflag: 1, errorMessage: "" };
+    this.state = { email: "", password: "", authflag: 1, errorMessage: "", error: false };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -42,19 +42,19 @@ class Login extends React.Component {
   }
 
   async handleSubmit(event) {
+    this.setState({error: false});
     event.preventDefault();
     const data = { email: this.state.email, password: this.state.password }
-    console.log(data)
-    const response = await axios.post('http://localhost:4000/api/auth/login', data);
-    console.log(response);
-    if (response.data.accessToken) {
-      // successful login
-      localStorage.setItem('token', response.data.accessToken);
-      localStorage.setItem('id', response.data.id);
-      this.props.history.push('/selectquestion');
-    } else {
-      this.setState({ errorMessage: response.data.message });
+    try {
+        const response = await axios.post('http://localhost:4000/api/auth/login', data);
+        // successful login
+        localStorage.setItem('token', response.data.accessToken);
+        localStorage.setItem('id', response.data.id);
+        this.props.history.push('/selectquestion');
+    } catch (e) {
+        this.setState({ error: true, errorMessage: e.response.data.message });
     }
+    
   }
   
   render() {
@@ -115,6 +115,9 @@ class Login extends React.Component {
                         required
                       />
                     </Grid>
+                    {this.state.error && <Grid item>
+                        <Typography classes={classes.errorMessage} color='error' >{this.state.errorMessage}</Typography>
+                    </Grid>}
                     <Grid item>
                       <Button
                         variant="contained"
