@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { Grid, Typography, isWidthUp, withWidth, withStyles } from "@material-ui/core";
 import PriceCard from "./PriceCard";
-import calculateSpacing from "./calculateSpacing";
+import calculateSpacing from "../../components/HomePage/calculateSpacing";
 
 const styles = (theme) => ({
     containerFix: {
