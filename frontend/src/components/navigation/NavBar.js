@@ -14,7 +14,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import HomeIcon from "@material-ui/icons/Home";
 import HowToRegIcon from "@material-ui/icons/HowToReg";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
-import BookIcon from "@material-ui/icons/Book";
 import NavigationDrawer from "./NavigationDrawer";
 
 const styles = (theme) => ({
@@ -42,8 +41,6 @@ const styles = (theme) => ({
 function NavBar(props) {
     const {
         classes,
-        openRegisterDialog,
-        openLoginDialog,
         handleMobileDrawerOpen,
         handleMobileDrawerClose,
         mobileDrawerOpen,
@@ -56,18 +53,13 @@ function NavBar(props) {
             icon: <HomeIcon className="text-white" />,
         },
         {
-            link: "/blog",
-            name: "Blog",
-            icon: <BookIcon className="text-white" />,
-        },
-        {
+            link: "/register",
             name: "Register",
-            onClick: openRegisterDialog,
             icon: <HowToRegIcon className="text-white" />,
         },
         {
+            link: "/login",
             name: "Login",
-            onClick: openLoginDialog,
             icon: <LockOpenIcon className="text-white" />,
         },
     ];
@@ -82,7 +74,7 @@ function NavBar(props) {
                             display="inline"
                             color="primary"
                         >
-                            Wa
+                            Peer
                         </Typography>
                         <Typography
                             variant="h4"
@@ -90,7 +82,7 @@ function NavBar(props) {
                             display="inline"
                             color="secondary"
                         >
-                            Ver
+                            Prep
                         </Typography>
                     </div>
                     <div>

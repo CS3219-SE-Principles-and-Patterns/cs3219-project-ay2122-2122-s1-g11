@@ -10,6 +10,7 @@ import theme from "./theme";
 import ErrorPage from "./pages/ErrorPage";
 import SelectQuestion from "./pages/SelectQuestion";
 import NavBarManager from "./pages/home/NavBarManager";
+import Register from "./pages/Register";
 
 class App extends Component {
     render() {
@@ -19,13 +20,16 @@ class App extends Component {
                 <GlobalStyles />
                 <Router>
                     <NavBarManager />
-                    <div style={{ paddingTop: "60px" }}>
+                    <div style={{ paddingTop: "60px", textAlign: "center" }}>
                         <Switch>
                             <Route path="/room">
                                 <Room />
                             </Route>
                             <Route path="/login">
                                 <Login />
+                            </Route>
+                            <Route path="/register">
+                                <Register />
                             </Route>
                             <Route path="/selectquestion">
                                 <SelectQuestion />

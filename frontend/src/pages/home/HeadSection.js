@@ -112,17 +112,28 @@ function HeadSection(props) {
                                         <Box
                                             display="flex"
                                             flexDirection="column"
-                                            justifyContent="space-between"
+                                            justifyContent="center"
                                             height="100%"
                                         >
                                             <Box mb={4}>
                                                 <Typography
-                                                    variant={isWidthUp("lg", width) ? "h3" : "h4"}
+                                                    variant={isWidthUp("lg", width) ? "h4" : "h5"}
                                                 >
-                                                    Free Template for building a SaaS app using
-                                                    Material-UI
+                                                    Improve your programming skill now!
                                                 </Typography>
                                             </Box>
+                                            <Hidden mdUp>
+                                                <Grid item xs={12} md={6}>
+                                                    <ZoomImage
+                                                        src={
+                                                            require(`../../images/headerImage1.PNG`)
+                                                                .default
+                                                        }
+                                                        className={classes.image}
+                                                        alt="header"
+                                                    />
+                                                </Grid>
+                                            </Hidden>
                                             <div>
                                                 <Box mb={2}>
                                                     <Typography
@@ -131,9 +142,9 @@ function HeadSection(props) {
                                                         }
                                                         color="textSecondary"
                                                     >
-                                                        Lorem ipsum dolor sit amet, consetetur
-                                                        sadipscing elitr, sed diam nonumy eirmod
-                                                        tempor invidunt
+                                                        Learn to solve programming questions with
+                                                        another peer in order to achieve better
+                                                        results!
                                                     </Typography>
                                                 </Box>
                                                 <Button
@@ -144,19 +155,22 @@ function HeadSection(props) {
                                                     classes={{
                                                         label: classes.extraLargeButtonLabel,
                                                     }}
-                                                    href="https://github.com/dunky11/react-saas-template"
+                                                    style={{ marginTop: "15px" }}
+                                                    href="./login"
                                                 >
-                                                    Download from GitHub
+                                                    Get Started Now
                                                 </Button>
                                             </div>
                                         </Box>
                                     </Grid>
                                     <Hidden smDown>
-                                        <Grid item md={6}>
+                                        <Grid item xs={12} md={6}>
                                             <ZoomImage
-                                                src={`${process.env.PUBLIC_URL}/images/headerImage.jpg`}
+                                                src={
+                                                    require(`../../images/headerImage1.PNG`).default
+                                                }
                                                 className={classes.image}
-                                                alt="header example"
+                                                alt="header"
                                             />
                                         </Grid>
                                     </Hidden>
