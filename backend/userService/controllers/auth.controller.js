@@ -7,7 +7,6 @@ const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-const sgMail = require('@sendgrid/mail');
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv'); 
 dotenv.config();
