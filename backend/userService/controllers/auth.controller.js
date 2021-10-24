@@ -7,8 +7,9 @@ const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-const sgMail = require('@sendgrid/mail');
-const sendGridKey = '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'
+const nodemailer = require("nodemailer");
+const dotenv = require('dotenv'); 
+dotenv.config();
 const resetSecret = 'Fn4AvqVAcxYSRp70HZijedbhPpKIPh3L7OBnYzCumag1p5wT8DgV6piG6Wfe0tr'
 
 exports.register = (req, res) => { 
@@ -137,13 +138,13 @@ exports.resetPassword = (req, res) => {
   try {
     User.findOne({
       where : {
-        resetLink: req.body.token
+        resetLink: req.query.token
       }
     }).then(user => {
       if (!user) {
         return res.status(404).send({ message: "User Not Found"});
       } else {
-        jwt.verify(req.body.token, resetSecret, (error, decoded) => {
+        jwt.verify(req.query.token, resetSecret, (error, decoded) => {
           if (error) {
             res.status(401).json({message: 'Incorrect Token or expired'}); 
           }
@@ -161,22 +162,25 @@ exports.resetPassword = (req, res) => {
   }
 }; 
 
-// TODO: Debug why email is not being sent. Try nodemail. 
 function sendEmail(user, token) {
-  sgMail.setApiKey(sendGridKey);
-  const msg = {
-    to: user.email,
-    from: "silverbuddy@zohomail.com", // your email
-    subject: "Reset password requested",
-    html: `
-     <a href="http://localhost:4000/api/auth/resetPassword/${token}">${token}</a>
-   `
-  };
+  try {
+      const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+              user: 'peerprepproject@gmail.com',
+              pass: 'PeerPrepProject'
+          },
+      });
+      const link = `http://localhost:4000/api/auth/resetPassword?token=${token}`
+      transporter.sendMail({
+          from: 'peerprepproject@gmail.com',
+          to: user.email,
+          subject: "Reset password requested",
+          text: `Please follow this link to reset your password: \n` + link + `\n \n This link will be valid for 10 minutes only.`
+      });
 
-  sgMail.send(msg)
-    .then(() => {
-      console.log("Kindly follow the instructions to reset password.", token, user.email);
-  }).catch((error) => {
-      console.error(error);
-  })
+      console.log("email sent sucessfully to " + user.email);
+  } catch (error) {
+      console.log(error, "email not sent");
+  }
 }
