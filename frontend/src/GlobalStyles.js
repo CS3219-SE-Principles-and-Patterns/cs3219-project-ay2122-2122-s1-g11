@@ -66,15 +66,15 @@ const styles = (theme) => ({
             },
         },
         ".lg-mg-bottom": {
-            marginBottom: `${theme.spacing(20)}px !important`,
+            marginBottom: `${theme.spacing(12)}px !important`,
             [theme.breakpoints.down("md")]: {
-                marginBottom: `${theme.spacing(18)}px !important`,
+                marginBottom: `${theme.spacing(10)}px !important`,
             },
             [theme.breakpoints.down("sm")]: {
-                marginBottom: `${theme.spacing(16)}px !important`,
+                marginBottom: `${theme.spacing(8)}px !important`,
             },
             [theme.breakpoints.down("xs")]: {
-                marginBottom: `${theme.spacing(14)}px !important`,
+                marginBottom: `${theme.spacing(6)}px !important`,
             },
         },
         ".lg-p-top": {
