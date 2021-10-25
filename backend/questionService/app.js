@@ -5,8 +5,13 @@ const bodyParser = require("body-parser");
 const app = express();
 app.use(bodyParser.json());
 
+// dotenv
+require('dotenv').config()
+
 // Cors to fix the CORS policy: No 'Access-Control-Allow-Origin' error so that we can fetch from frontend
 const cors = require("cors");
+
+
 
 app.use(cors());
 app.use(function (req, res, next) {
