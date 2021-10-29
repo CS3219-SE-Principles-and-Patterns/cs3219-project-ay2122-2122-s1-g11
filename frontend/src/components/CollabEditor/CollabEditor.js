@@ -49,8 +49,8 @@ const CollabEditor = ({ id, user, style }) => {
                     yUndoManager,
                 });
 
-                // send welcome message
-                EditorRef.setValue(`// Welcome to room ${id}! Happy coding :D`);
+                // send welcome message, disabled due to bug
+                // EditorRef.setValue(`// Welcome to room ${id}! Happy coding :D`);
 
             } catch (err) {
                 alert("There is an issue with code collaboration editor. Try again later!");
