@@ -7,7 +7,7 @@ var corsOptions = {
     origin: "http://localhost:4001"
 }; 
 
-app.use(cors(corsOptions)); 
+app.use(cors()); 
 
 app.use(bodyParser.json()); 
 
