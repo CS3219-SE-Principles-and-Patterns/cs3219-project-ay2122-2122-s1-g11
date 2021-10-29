@@ -9,7 +9,9 @@ import GlobalStyles from "./GlobalStyles";
 import theme from "./theme";
 import ErrorPage from "./pages/ErrorPage";
 import SelectQuestion from "./pages/SelectQuestion";
-import NavBarManager from "./components/HomePage/NavBarManager";
+import NavBarManager from "./components/navigation/NavBarManager";
+import AuthProvider from "./components/Authentication/AuthContext";
+import PrivateRoute from "./components/Authentication/PrivateRoute";
 import Register from "./pages/Register";
 
 class App extends Component {
@@ -19,29 +21,33 @@ class App extends Component {
                 <CssBaseline />
                 <GlobalStyles />
                 <Router>
-                    <NavBarManager />
-                    <div style={{ paddingTop: "60px", textAlign: "center" }}>
-                        <Switch>
-                            <Route path="/room">
-                                <Room />
-                            </Route>
-                            <Route path="/login">
-                                <Login />
-                            </Route>
-                            <Route path="/register">
-                                <Register />
-                            </Route>
-                            <Route path="/selectquestion">
-                                <SelectQuestion />
-                            </Route>
-                            <Route path="/" exact>
-                                <Home />
-                            </Route>
-                            <Route path="/">
-                                <ErrorPage />
-                            </Route>
-                        </Switch>
-                    </div>
+                    <AuthProvider>
+                        <NavBarManager />
+                        <div style={{ paddingTop: "60px", textAlign: "center" }}>
+                            <Switch>
+                                <PrivateRoute path="/room" component={SelectQuestion} />
+                                <Route path="/room">
+                                    <Room />
+                                </Route>
+                                <Route path="/login">
+                                    <Login />
+                                </Route>
+                                <Route path="/register">
+                                    <Register />
+                                </Route>
+                                <Route path="/selectquestion">
+                                    <SelectQuestion />
+                                </Route>
+                                <PrivateRoute path="/selectquestion" component={SelectQuestion} />
+                                <Route path="/" exact>
+                                    <Home />
+                                </Route>
+                                <Route path="/">
+                                    <ErrorPage />
+                                </Route>
+                            </Switch>
+                        </div>
+                    </AuthProvider>
                 </Router>
             </MuiThemeProvider>
         );

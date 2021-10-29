@@ -2,7 +2,7 @@ import React, { memo, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import AOS from "aos/dist/aos";
 import { withStyles } from "@material-ui/core";
-import NavBar from "../Navigation/NavBar";
+import NavBar from "./NavBar";
 import "aos/dist/aos.css";
 
 AOS.init({ once: true });
