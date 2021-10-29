@@ -42,6 +42,6 @@ require('../userService/routes/user.routes')(app);
 
 const PORT = process.env.PORT || 4000; 
 
-app.listen(PORT, () => {
+module.exports = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`); 
 }); 
