@@ -78,9 +78,9 @@ const CollabEditor = ({ id, user, style }) => {
             <div style={{
                 display: 'flex',
                 flexDirection: 'column',
-                height: '100%'
+                width: '100%'
             }}>
-                <div style={{ flex: 10 }}>
+                <div style={{ display: 'flex', flex: 10, overflowY: 'auto' }}>
                 <CodeMirrorEditor
                     onChange={(editor, data, value) => {
                         setCode(value);
@@ -104,7 +104,7 @@ const CollabEditor = ({ id, user, style }) => {
                     }}
                     editorDidMount={(editor) => {
                         handleEditorDidMount(editor);
-                        editor.setSize("100vw", "100%");
+                        editor.setSize("100%", "inherit");
                     }}
                 />
                 </div>

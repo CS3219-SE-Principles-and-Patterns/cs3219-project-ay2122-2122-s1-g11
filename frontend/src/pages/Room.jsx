@@ -17,35 +17,46 @@ const Room = () => {
     return (
         <div style={{
             display: 'flex',
-            flexDirection: 'row',
-            minHeight: '100vh',
-            maxWidth: '100%'
+            flexDirection: 'column',
+            height: '100vh'
         }}>
-            { getRoomId() != null ? 
-                <div style={{ display: 'flex', width: '100%' }}>
-                    <div
-                        style={{
-                            fontSize: "15px",
-                            overflowY: "auto",
-                            textAlign: "left",
-                            flex: 3,
-                            height: '100%'
-                        }}>
-                            <CollabEditor 
-                                id={getRoomId()}
-                                user={getUserId()} />
-                    </div>
-                    <div
-                        style={{
-                            flex: 1,
-                            height: '100%'
-                        }}>
-                            <Chatbox 
-                                roomNo={getRoomId()} />
-                    </div>
-                </div>
-            : <h2>You must be redirected by a room number!</h2>
-            }
+            <div style={{
+                display: 'flex',
+                paddingLeft: 10
+            }}>
+               <h2>What is the O(O(O(O())) runtime of CSS?</h2>
+            </div>
+            <div style={{
+                display: 'flex',
+                flex: 1,
+                flexDirection: 'row',
+                minHeight: 0
+            }}>
+                { getRoomId() != null ? 
+                    <>
+                        <div
+                            style={{
+                                fontSize: "15px",
+                                textAlign: "left",
+                                display: 'flex',
+                                flex: 3,
+                            }}>
+                                <CollabEditor 
+                                    id={getRoomId()}
+                                    user={getUserId()} />
+                        </div>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flex: 1,
+                            }}>
+                                <Chatbox 
+                                    roomNo={getRoomId()} />
+                        </div>
+                    </>
+                : <h2>You must be redirected by a room number!</h2>
+                }
+            </div>
         </div>
     );
 };

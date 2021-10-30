@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 
 // http://a3a8c8d99028a4193b8886ba7d66cdc6-978900654.ap-southeast-1.elb.amazonaws.com:5000
-const socket = io.connect('http://localhost:5000', {
-    "transports": ['websocket']
-});
+const socket = io.connect('http://localhost:5000');
 
 const Chatbox = ({ roomNo }) => {
 
@@ -17,6 +15,7 @@ const Chatbox = ({ roomNo }) => {
     };
 
     useEffect(() => {
+        socket.emit('join', roomNo);
         socket.on('chat_new_message', ({ message }) => {
             setChatMessages(prevMessages => [
                 ...prevMessages,
@@ -77,19 +76,19 @@ const Chatbox = ({ roomNo }) => {
             // <button onClick={onMessageSend}>Enter</button>
         // </div>
 
-        <div style={{ height: '100%' }}>
+        <div style={{ width: '100%' }}>
             {/* main wrapper div */}
             <div
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    height: '100%'
+                    height: '100%',
                 }}>
                     {/* chat box area */}
                     <div
                         style={{
                             display: 'flex',
-                            flex: 20,
+                            flex: 60,
                             flexDirection: 'column',
                             overflow: 'auto',
                             backgroundColor: '#F7F7F7'
