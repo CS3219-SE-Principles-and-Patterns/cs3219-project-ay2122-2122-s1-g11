@@ -35,6 +35,7 @@ function NavBarManager(props) {
                 mobileDrawerOpen={isMobileDrawerOpen}
                 handleMobileDrawerOpen={handleMobileDrawerOpen}
                 handleMobileDrawerClose={handleMobileDrawerClose}
+                isAuthenticated={props.isAuthenticated}
             />
         </div>
     );

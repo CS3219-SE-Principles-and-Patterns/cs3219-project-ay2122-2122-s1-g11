@@ -59,7 +59,7 @@ class Login extends React.Component {
                 "http://localhost:4000/api/auth/register",
                 registerData
             );
-            if (response.data.message == "User was registered successfully!") {
+            if (response.data.message === "User was registered successfully!") {
                 // successful register then proceed to login
                 const loginData = { email: this.state.email, password: this.state.password };
                 const response = await axios.post(

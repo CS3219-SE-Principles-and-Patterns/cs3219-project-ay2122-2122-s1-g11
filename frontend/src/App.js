@@ -15,6 +15,10 @@ import PrivateRoute from "./components/Authentication/PrivateRoute";
 import Register from "./pages/Register";
 
 class App extends Component {
+    isAuthenticated = () => {
+        return Boolean(localStorage.getItem("token"));
+    };
+
     render() {
         return (
             <MuiThemeProvider theme={theme}>
@@ -22,21 +26,15 @@ class App extends Component {
                 <GlobalStyles />
                 <Router>
                     <AuthProvider>
-                        <NavBarManager />
+                        <NavBarManager isAuthenticated={this.isAuthenticated} />
                         <div style={{ paddingTop: "60px", textAlign: "center" }}>
                             <Switch>
-                                <PrivateRoute path="/room" component={SelectQuestion} />
-                                <Route path="/room">
-                                    <Room />
-                                </Route>
+                                <PrivateRoute path="/room" component={Room} />
                                 <Route path="/login">
                                     <Login />
                                 </Route>
                                 <Route path="/register">
                                     <Register />
-                                </Route>
-                                <Route path="/selectquestion">
-                                    <SelectQuestion />
                                 </Route>
                                 <PrivateRoute path="/selectquestion" component={SelectQuestion} />
                                 <Route path="/" exact>

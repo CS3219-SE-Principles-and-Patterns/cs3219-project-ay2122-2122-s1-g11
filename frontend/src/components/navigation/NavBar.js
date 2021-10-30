@@ -14,7 +14,10 @@ import MenuIcon from "@material-ui/icons/Menu";
 import HomeIcon from "@material-ui/icons/Home";
 import HowToRegIcon from "@material-ui/icons/HowToReg";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import NavigationDrawer from "./NavigationDrawer";
+import { withRouter } from "react-router";
 
 const styles = (theme) => ({
     appBar: {
@@ -46,23 +49,48 @@ function NavBar(props) {
         mobileDrawerOpen,
         selectedTab,
     } = props;
+
+    const logoutUser = () => {
+        localStorage.removeItem("id");
+        localStorage.removeItem("token");
+        props.history.push("/");
+    };
+
+    const isUserLoggedIn = props.isAuthenticated();
+
     const menuItems = [
         {
+            visibility: "public",
             link: "/",
             name: "Home",
             icon: <HomeIcon className="text-white" />,
         },
         {
+            visibility: "public",
             link: "/register",
             name: "Register",
             icon: <HowToRegIcon className="text-white" />,
         },
         {
+            visibility: "public",
             link: "/login",
             name: "Login",
             icon: <LockOpenIcon className="text-white" />,
         },
+        {
+            visibility: "private",
+            link: "/selectquestion",
+            name: "Question",
+            icon: <QuestionAnswerIcon className="text-white" />,
+        },
+        {
+            visibility: "private",
+            onClick: logoutUser,
+            name: "Logout",
+            icon: <ExitToAppIcon className="text-white" />,
+        },
     ];
+
     return (
         <div className={classes.root}>
             <AppBar position="fixed" className={classes.appBar}>
@@ -97,6 +125,13 @@ function NavBar(props) {
                         </Hidden>
                         <Hidden smDown>
                             {menuItems.map((element) => {
+                                if (!isUserLoggedIn && element.visibility === "private") {
+                                    // Guard Clause for menu items that should be private to unlogged in user
+                                    return <span />;
+                                } else if (isUserLoggedIn && element.visibility === "public") {
+                                    // Guard Clause for menu items that should not be shown to a logged in user
+                                    return <span />;
+                                }
                                 if (element.link) {
                                     return (
                                         <Link
@@ -152,4 +187,4 @@ NavBar.propTypes = {
     openLoginDialog: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(memo(NavBar));
+export default withStyles(styles, { withTheme: true })(memo(withRouter(NavBar)));

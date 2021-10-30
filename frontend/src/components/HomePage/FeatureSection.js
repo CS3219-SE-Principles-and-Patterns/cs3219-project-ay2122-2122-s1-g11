@@ -28,7 +28,7 @@ const features = [
     },
     {
         color: "#6200EA",
-        headline: "Convinent",
+        headline: "Convenient",
         text: "Just register an account and start practicing with us right away!",
         icon: <CalendarTodayIcon style={{ fontSize: iconSize }} />,
         mdDelay: "200",
