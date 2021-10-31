@@ -126,11 +126,35 @@ exports.forgotPassword =  (req, res) => {
         });
         user.update({resetLink: token})
         sendEmail(user, token)
-        return res.status(200).json({message: "Check your email", token: token}); 
+        return res.status(200).json({message: "Check your email"}); 
       }
     })
   } catch(error) {
     res.status(500).json({message: error.message}); 
+  }
+}; 
+
+exports.checkValidUserWithRefreshToken = (req, res) => {
+  try{ 
+    User.findOne({
+      where : {
+        resetLink: req.query.token 
+      } 
+    }).then(user => {
+      if (!user) {
+        return res.status(404).send({message: "User Not Found"}); 
+      } else {
+        jwt.verify(req.query.token, resetSecret, (error, decoded) => {
+          if (error) {
+            res.status(401).send({message: 'Incorrect Token or expired'}); 
+          }
+          req.userId = decoded.id; 
+        })
+        return res.status(200).send({message: "User is valid", user: user}); 
+      }
+    })
+  } catch(error) {
+    res.status(500).send({message: error.message});
   }
 }; 
 
@@ -171,7 +195,7 @@ function sendEmail(user, token) {
               pass: 'PeerPrepProject'
           },
       });
-      const link = `http://localhost:4000/api/auth/resetPassword?token=${token}`
+      const link = `http://localhost:3000/resetPassword?token=${token}`
       transporter.sendMail({
           from: 'peerprepproject@gmail.com',
           to: user.email,
