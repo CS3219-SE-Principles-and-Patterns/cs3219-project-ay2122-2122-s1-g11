@@ -7,7 +7,7 @@ const socket = io.connect('http://localhost:5000');
 const Chatbox = ({ roomNo }) => {
 
     const [chatMessages, setChatMessages] = useState([]);
-    const [chatBoxText, setChatBoxText] = useState('');
+    const [chatBoxText, setChatBoxText] = useState("");
     const messagesEndRef = useRef(null);
 
     const scrollToView = () => {
@@ -20,9 +20,9 @@ const Chatbox = ({ roomNo }) => {
             setChatMessages(prevMessages => [
                 ...prevMessages,
                 {
-                    type: 'receive',
-                    text: message
-                }
+                    type: "receive",
+                    text: message,
+                },
             ]);
         });
     }, [socket]);
@@ -30,22 +30,22 @@ const Chatbox = ({ roomNo }) => {
     useEffect(() => {
         if (chatMessages.length > 0) scrollToView();
     }, [chatMessages]);
-    
+
     const onMessageSend = () => {
-        socket.emit('chat_send_message', { roomNo, message: chatBoxText });
+        socket.emit("chat_send_message", { roomNo, message: chatBoxText });
         setChatMessages([
             ...chatMessages,
             {
-                type: 'send',
-                text: chatBoxText
-            }
+                type: "send",
+                text: chatBoxText,
+            },
         ]);
-        setChatBoxText('');
+        setChatBoxText("");
     };
 
     const onInputKeydown = (e) => {
-        if (e.key === 'Enter') onMessageSend();
-    }
+        if (e.key === "Enter") onMessageSend();
+    };
 
     return (
         // <div>

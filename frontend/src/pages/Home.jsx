@@ -1,11 +1,21 @@
-import React from "react";
+import React, { Fragment } from "react";
+import PropTypes from "prop-types";
+import HeadSection from "../components/HomePage/HeadSection";
+import FeatureSection from "../components/HomePage/FeatureSection";
+import Footer from "../components/HomePage/Footer";
 
-const Home = () => {
+function Home() {
     return (
-        <div>
-            <h2>Home Page</h2>
-        </div>
+        <Fragment>
+            <HeadSection />
+            <FeatureSection />
+            <Footer />
+        </Fragment>
     );
+}
+
+Home.propTypes = {
+    selectHome: PropTypes.func.isRequired,
 };
 
 export default Home;

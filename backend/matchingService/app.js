@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var queueRouter = require('./routes/match');
 const cors = require("cors");
+const verifyToken = require('./middleware/authJwt');
 
 var app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => verifyToken(req, res, next));
 
 app.use('/match', queueRouter);
 
