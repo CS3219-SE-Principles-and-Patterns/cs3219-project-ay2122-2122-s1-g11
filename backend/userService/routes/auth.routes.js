@@ -25,5 +25,5 @@ app.post("/api/auth/logout", [verifyRegister.verifyToken], controller.logout);
 
 app.patch("/api/auth/forgotPassword", [verifyRegister.verifyToken], controller.forgotPassword); 
 
-app.put("/api/auth/resetPassword",[verifyRegister.passwordvalidation], controller.resetPassword);
+app.put("/resetPassword",[verifyRegister.passwordvalidation], controller.resetPassword);
 };

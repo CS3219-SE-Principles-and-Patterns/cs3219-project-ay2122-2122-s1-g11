@@ -126,7 +126,7 @@ exports.forgotPassword =  (req, res) => {
         });
         user.update({resetLink: token})
         sendEmail(user, token)
-        return res.status(200).json({message: "Check your email", token: token}); 
+        return res.status(200).json({message: "Check your email"}); 
       }
     })
   } catch(error) {
@@ -171,7 +171,9 @@ function sendEmail(user, token) {
               pass: 'PeerPrepProject'
           },
       });
-      const link = `http://localhost:4000/api/auth/resetPassword?token=${token}`
+      const link = `http://localhost:3000/resetPassword?token=${token}`
+      // Front end page for reset password using the resetToken in the query params. 
+      // Call userservice to PUT localhost://4000/resetPassword/token?{token}
       transporter.sendMail({
           from: 'peerprepproject@gmail.com',
           to: user.email,
