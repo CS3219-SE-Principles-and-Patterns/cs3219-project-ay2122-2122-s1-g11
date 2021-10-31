@@ -1,6 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import io from 'socket.io-client';
 
-const Chatbox = ({ socket, roomNo }) => {
+// http://a3a8c8d99028a4193b8886ba7d66cdc6-978900654.ap-southeast-1.elb.amazonaws.com:5000
+const socket = io.connect('http://localhost:5000');
+
+const Chatbox = ({ roomNo }) => {
+
     const [chatMessages, setChatMessages] = useState([]);
     const [chatBoxText, setChatBoxText] = useState("");
     const messagesEndRef = useRef(null);
@@ -10,8 +15,9 @@ const Chatbox = ({ socket, roomNo }) => {
     };
 
     useEffect(() => {
-        socket.on("chat_new_message", ({ message }) => {
-            setChatMessages((prevMessages) => [
+        socket.emit('join', roomNo);
+        socket.on('chat_new_message', ({ message }) => {
+            setChatMessages(prevMessages => [
                 ...prevMessages,
                 {
                     type: "receive",
@@ -42,62 +48,83 @@ const Chatbox = ({ socket, roomNo }) => {
     };
 
     return (
-        <>
-            <h1>Chat Room</h1>
+        // <div>
+            // <div 
+            //     style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'auto', backgroundColor: '#F7F7F7' }}>
+            //     {
+            //         chatMessages.map(message => {
+            //             if (message.type === 'send') {
+            //                 return (<div style={{ backgroundColor: '#d3f3f5', padding: '10px', borderRadius: '10px', display: 'flex', alignSelf: 'flex-start', marginBottom: '5px' }}>
+            //                         { message.text }
+            //                     </div>)
+            //             } else if (message.type === 'receive') {
+            //                 return (<div style={{ backgroundColor: '#ddf5d3', padding: '10px', borderRadius: '10px', display: 'flex', alignSelf: 'flex-end', marginBottom: '5px' }}>
+            //                         { message.text }
+            //                     </div>)
+            //             }
+            //         })
+            //     }
+            //     <div ref={messagesEndRef}></div>
+            // </div>
+            // <input 
+            //     type="text" 
+            //     placeholder="Enter your chat text here" 
+            //     onChange={(e) => setChatBoxText(e.target.value)}
+            //     onKeyDown={onInputKeydown}
+            //     value={chatBoxText}
+            //     style={{ width: '80%', padding: '5px 10px' }}/>
+            // <button onClick={onMessageSend}>Enter</button>
+        // </div>
+
+        <div style={{ width: '100%' }}>
+            {/* main wrapper div */}
             <div
                 style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "240px",
-                    overflow: "auto",
-                    backgroundColor: "#F7F7F7",
-                }}
-            >
-                {chatMessages.map((message) => {
-                    if (message.type === "send") {
-                        return (
-                            <div
-                                style={{
-                                    backgroundColor: "#d3f3f5",
-                                    padding: "10px",
-                                    borderRadius: "10px",
-                                    display: "flex",
-                                    alignSelf: "flex-start",
-                                    marginBottom: "5px",
-                                }}
-                            >
-                                {message.text}
-                            </div>
-                        );
-                    } else if (message.type === "receive") {
-                        return (
-                            <div
-                                style={{
-                                    backgroundColor: "#ddf5d3",
-                                    padding: "10px",
-                                    borderRadius: "10px",
-                                    display: "flex",
-                                    alignSelf: "flex-end",
-                                    marginBottom: "5px",
-                                }}
-                            >
-                                {message.text}
-                            </div>
-                        );
-                    }
-                })}
-                <div ref={messagesEndRef}></div>
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                }}>
+                    {/* chat box area */}
+                    <div
+                        style={{
+                            display: 'flex',
+                            flex: 60,
+                            flexDirection: 'column',
+                            overflow: 'auto',
+                            backgroundColor: '#F7F7F7'
+                        }}>
+                            {
+                                chatMessages.map(message => {
+                                    if (message.type === 'send') {
+                                        return (<div style={{ backgroundColor: '#d3f3f5', padding: '10px', borderRadius: '10px', display: 'flex', alignSelf: 'flex-start', marginBottom: '5px' }}>
+                                                { message.text }
+                                            </div>)
+                                    } else if (message.type === 'receive') {
+                                        return (<div style={{ backgroundColor: '#ddf5d3', padding: '10px', borderRadius: '10px', display: 'flex', alignSelf: 'flex-end', marginBottom: '5px' }}>
+                                                { message.text }
+                                            </div>)
+                                    }
+                                })
+                            }
+                            <div ref={messagesEndRef}></div>
+                    </div>
+                    {/* input area */}
+                    <div
+                        style={{
+                            display: 'flex',
+                            flex: 1
+                        }}>
+                        <input 
+                            type="text" 
+                            placeholder="Enter your chat text here" 
+                            onChange={(e) => setChatBoxText(e.target.value)}
+                            onKeyDown={onInputKeydown}
+                            value={chatBoxText}
+                            style={{ width: '80%', padding: '5px 10px' }}/>
+                        <button onClick={onMessageSend}>Enter</button>
+                    </div>
             </div>
-            <input
-                type="text"
-                placeholder="Enter your chat text here"
-                onChange={(e) => setChatBoxText(e.target.value)}
-                onKeyDown={onInputKeydown}
-                value={chatBoxText}
-                style={{ width: "80%", padding: "5px 10px" }}
-            />
-            <button onClick={onMessageSend}>Enter</button>
-        </>
+        </div>
     );
 };
 
