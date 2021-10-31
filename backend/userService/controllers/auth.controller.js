@@ -134,6 +134,30 @@ exports.forgotPassword =  (req, res) => {
   }
 }; 
 
+exports.checkValidUserWithRefreshToken = (req, res) => {
+  try{ 
+    User.findOne({
+      where : {
+        resetLink: req.query.token 
+      } 
+    }).then(user => {
+      if (!user) {
+        return res.status(404).send({message: "User Not Found"}); 
+      } else {
+        jwt.verify(req.query.token, resetSecret, (error, decoded) => {
+          if (error) {
+            res.status(401).send({message: 'Incorrect Token or expired'}); 
+          }
+          req.userId = decoded.id; 
+        })
+        return res.status(200).send({message: "User is valid", user: user}); 
+      }
+    })
+  } catch(error) {
+    res.status(500).send({message: error.message});
+  }
+}; 
+
 exports.resetPassword = (req, res) => {
   try {
     User.findOne({
@@ -172,8 +196,6 @@ function sendEmail(user, token) {
           },
       });
       const link = `http://localhost:3000/resetPassword?token=${token}`
-      // Front end page for reset password using the resetToken in the query params. 
-      // Call userservice to PUT localhost://4000/resetPassword/token?{token}
       transporter.sendMail({
           from: 'peerprepproject@gmail.com',
           to: user.email,
