@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import Chatbox from "../components/Chatbox/Chatbox";
 import CollabEditor from "../components/CollabEditor/CollabEditor";
+import { QuestionContext } from "../components/QuestionSelection/QuestionContext";
 
 const Room = () => {
-
+    const {question, setQuestion} = useContext(QuestionContext);
     const location = useLocation();
     const getRoomId = () => {
         return new URLSearchParams(location.search).get('id');
@@ -24,7 +25,7 @@ const Room = () => {
                 display: 'flex',
                 paddingLeft: 10
             }}>
-               <h2>What is the O(O(O(O())) runtime of CSS?</h2>
+               <h2>{question}</h2>
             </div>
             <div style={{
                 display: 'flex',

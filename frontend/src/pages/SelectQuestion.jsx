@@ -1,20 +1,23 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { getCategoriesAPI, getRandomQuestionAPI } from "../api/questionService";
+import { getCategoriesAPI } from "../api/questionService";
 import ErrorAlert from "../components/Others/ErrorAlert";
 import SelectCategory from "../components/QuestionSelection/SelectCategory";
 import SelectDifficulty from "../components/QuestionSelection/SelectDifficulty";
 import LoadingScreen from "../components/QuestionSelection/LoadingScreen";
 import axios from "axios";
 import ErrorMsgs from "../constants/ErrorMsgs";
+import { QuestionContext } from '../components/QuestionSelection/QuestionContext';
 
 class SelectQuestion extends Component {
+    static contextType = QuestionContext
     constructor(props) {
         super(props);
         this.state = {
             difficultySelected: "",
             categories: [],
             categorySelected: "",
+            question: "",
             loadingState: false,
             userId: null, // update userId to be Id from database
             intervalId: null,
@@ -75,16 +78,6 @@ class SelectQuestion extends Component {
         }
     };
 
-    getRandomQuestion = async (category) => {
-        const result = await getRandomQuestionAPI(this.state.difficultySelected, category);
-        if (result.status === 200) {
-            const question = result.data.questions[0];
-            console.log(question);
-        } else {
-            this.setState({ errorMsg: ErrorMsgs.noQuestionAPI, errorMsgDisplay: "" });
-        }
-    };
-
     loadingScreenHandleClose = () => {
         this.setState({ loadingState: false });
         if (this.state.intervalId) {
@@ -122,9 +115,10 @@ class SelectQuestion extends Component {
                 }
             });
         if (response.data.matchStatus === "success") {
+            this.setState({ question: response.data.question })
             // get the random question
             // connect to code collab
-            this.props.history.push("/room");
+            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem('id')}`);
         } else if (response.data.matchStatus === "waiting") {
             const interval = setInterval(() => this.findMatch(userId), 5000);
             this.setState({ intervalId: interval });
@@ -151,7 +145,8 @@ class SelectQuestion extends Component {
         } else if (response.data.matchStatus == "success") {
             clearInterval(this.state.intervalId);
             this.setState({ intervalId: null });
-            this.props.history.push("/room");
+            this.setState({ question: response.data.question })
+            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem('id')}`);
             // get the random question
             // connect to code collab
         }
@@ -160,6 +155,11 @@ class SelectQuestion extends Component {
     render() {
         const { difficultySelected, categories, categorySelected, errorMsg, errorMsgDisplay } =
             this.state;
+
+        const { question, setQuestion } = this.context;
+        if (this.state.question) {
+            setQuestion(this.state.question);
+        }
 
         const SelectType = difficultySelected ? (
             <SelectCategory onSelect={this.onCategorySelect} categories={categories} />
