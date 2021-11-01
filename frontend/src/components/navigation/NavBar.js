@@ -18,6 +18,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import NavigationDrawer from "./NavigationDrawer";
 import { withRouter } from "react-router";
+import axios from 'axios';
 
 const styles = (theme) => ({
     appBar: {
@@ -51,6 +52,11 @@ function NavBar(props) {
     } = props;
 
     const logoutUser = () => {
+        axios.post("http://localhost:4000/api/auth/logout", {}, {
+            headers: {
+                "x-access-token": localStorage.getItem('token')
+            }
+          })
         localStorage.removeItem("id");
         localStorage.removeItem("token");
         props.history.push("/");
