@@ -62,5 +62,19 @@ router.post('/delete', function(req, res) {
   })
 })
 
+router.post('/deleteZombie', function(req, res) {
+  const userId = req.body.user;
+  redisClient.keys("*" + userId, (error, value) => {
+    value.forEach((keyToDelete) => {
+      redisClient.del(keyToDelete, (error, value) => {
+        if (error) {
+          console.log(error);
+        }
+        return res.json(value);
+      })
+    })
+  })
+})
+
 
 module.exports = router;

@@ -23,6 +23,21 @@ class SelectQuestion extends Component {
         };
     }
 
+    componentDidMount() {
+        // clear zombie state
+        try {
+            axios.post("http://localhost:8000/match/deleteZombie", {user: localStorage.getItem('id')},
+            {
+              headers: {
+                authorization: 'Bearer ' + localStorage.getItem('token')
+              }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+        
+    }
+
     componentWillUnmount() {
         if (this.state.intervalId) {
             clearInterval(this.state.intervalId);
@@ -82,25 +97,36 @@ class SelectQuestion extends Component {
                 difficulty: this.state.difficultySelected,
                 category: this.state.categorySelected,
             };
-            axios.post("http://localhost:8000/match/delete", data);
+            axios.post("http://localhost:8000/match/delete", data,
+            {
+              headers: {
+                authorization: 'Bearer ' + localStorage.getItem('token')
+              }
+            });
         }
     };
 
     createMatch = async () => {
-        const randomNumber = Math.floor(Math.random() * 1000);
-        this.setState({ userId: randomNumber });
+        const userId = localStorage.getItem('id');
+        this.setState({ userId });
         const data = {
-            user: randomNumber,
+            user: userId,
             difficulty: this.state.difficultySelected,
             category: this.state.categorySelected,
         };
-        const response = await axios.post("http://localhost:8000/match/create", data);
+        const response = await axios.post("http://localhost:8000/match/create", 
+            data,
+            {
+                headers: {
+                    authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            });
         if (response.data.matchStatus === "success") {
             // get the random question
             // connect to code collab
             this.props.history.push("/room");
         } else if (response.data.matchStatus === "waiting") {
-            const interval = setInterval(() => this.findMatch(randomNumber), 5000);
+            const interval = setInterval(() => this.findMatch(userId), 5000);
             this.setState({ intervalId: interval });
         }
     };
@@ -111,12 +137,18 @@ class SelectQuestion extends Component {
             user: userId,
             difficulty: this.state.difficultySelected,
             category: this.state.categorySelected,
+        },
+        {
+          headers: {
+            authorization: 'Bearer ' + localStorage.getItem('token')
+          }
         });
-        console.log("findMatch response: ", response);
-        if (response.data.matchStatus === "failed") {
+        console.log("findMatch response: ", response.data);
+        if (response.data.matchStatus == "failed") {
+            console.log('failed acivated')
             this.setState({ loadingState: false });
             clearInterval(this.state.intervalId);
-        } else if (response.data.matchStatus === "success") {
+        } else if (response.data.matchStatus == "success") {
             clearInterval(this.state.intervalId);
             this.setState({ intervalId: null });
             this.props.history.push("/room");
@@ -135,10 +167,10 @@ class SelectQuestion extends Component {
             <SelectDifficulty onSelect={this.onDifficultySelect} />
         );
 
-        if (difficultySelected && categorySelected) {
-            this.props.history.push("/room");
-            this.setState({ difficultySelected: "", categorySelected: "" });
-        }
+        // if (difficultySelected && categorySelected) {
+        //     this.props.history.push("/room");
+        //     this.setState({ difficultySelected: "", categorySelected: "" });
+        // }
 
         return (
             <React.Fragment>
