@@ -135,6 +135,12 @@ class Login extends React.Component {
                 <Link href="/register" variant="body2">
                   Don't have an account? Create account.
                 </Link>
+                
+              </Grid>
+              <Grid>
+                <Link href="/forgotPassword" variant="body2">
+                  Forgot Password?
+                </Link>
               </Grid>
             </Paper>
           </Grid>
