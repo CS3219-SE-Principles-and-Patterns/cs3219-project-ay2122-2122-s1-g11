@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Button, Grid, Typography } from '@material-ui/core';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,13 +23,15 @@ const useStyles = makeStyles((theme) => ({
 }
 }));
 
-export default function ResetPassword() {
+export default function ResetPassword(props) {
   const classes = useStyles();
 
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
+
+  const location = useLocation();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -38,7 +41,7 @@ export default function ResetPassword() {
         setError(true);
         return;
     } else {
-        axios.put("http://localhost:4000/resetPassword", { password: password2 })
+        axios.put(`http://localhost:4000${location.pathname}${location.search}`, { password: password2 })
             .then(response => {
                 console.log(response.data);
                 setMessage(response.data.message);
