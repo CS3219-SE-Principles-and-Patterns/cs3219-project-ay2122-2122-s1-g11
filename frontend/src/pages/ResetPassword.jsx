@@ -43,11 +43,10 @@ export default function ResetPassword(props) {
     } else {
         axios.put(`http://localhost:4000${location.pathname}${location.search}`, { password: password2 })
             .then(response => {
-                console.log(response.data);
                 setMessage(response.data.message);
             }).catch(error => {
                 setError(true);
-                setMessage('Email does not exist. Please try again.');
+                setMessage(error.response.data.message);
             })
     }
     
