@@ -2,6 +2,8 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
 const Role = db.role;
+var common = require("../routes/common"); 
+var node_env = common.config(); 
 
 const Op = db.Sequelize.Op;
 
@@ -198,7 +200,7 @@ function sendEmail(user, token) {
               pass: 'PeerPrepProject'
           },
       });
-      const link = `http://localhost:3000/resetPassword?token=${token}`
+      const link = `http://${node_env.frontend}/auth/resetPassword?token=${token}`
       transporter.sendMail({
           from: 'peerprepproject@gmail.com',
           to: user.email,

@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require("body-parser"); 
 const cors = require("cors"); 
 const app = express(); 
+var common = require("./routes/common"); 
+var config = common.config(); 
 
 var corsOptions = {
     origin: "http://localhost:4001"
@@ -40,8 +42,8 @@ function initial() {
 require('../userService/routes/auth.routes')(app);
 require('../userService/routes/user.routes')(app);
 
+const hostname = config.url; 
 const PORT = process.env.PORT || 4000; 
-
-module.exports = app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`); 
-}); 
+module.exports = app.listen(PORT, config.url , () => {
+    console.log(`Server running at http://${hostname}:${PORT}/`); 
+});  
