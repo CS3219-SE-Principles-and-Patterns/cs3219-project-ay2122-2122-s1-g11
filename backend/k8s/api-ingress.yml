@@ -12,7 +12,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /question
+          - path: /question/*
             pathType: Prefix
             backend:
               serviceName: question-service
