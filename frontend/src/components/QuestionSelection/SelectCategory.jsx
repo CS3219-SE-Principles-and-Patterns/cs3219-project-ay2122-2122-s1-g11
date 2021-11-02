@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const SelectCategory = ({ onSelect, categories }) => {
     const useStyles = makeStyles((theme) => ({
@@ -29,12 +30,12 @@ const SelectCategory = ({ onSelect, categories }) => {
             </Button>
         );
     });
-    console.log(categories);
 
     return (
         <div>
             <h2>Please select the category that you want to practice on</h2>
-            {categoryArray}
+            {/* Shows loading if the categories length is still 0, show the categories button otherwise */}
+            {categories.length === 0 ? <CircularProgress /> : categoryArray}
         </div>
     );
 };

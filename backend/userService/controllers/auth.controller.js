@@ -7,8 +7,9 @@ const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-const sgMail = require('@sendgrid/mail');
-const sendGridKey = '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'
+const nodemailer = require("nodemailer");
+const dotenv = require('dotenv'); 
+dotenv.config();
 const resetSecret = 'Fn4AvqVAcxYSRp70HZijedbhPpKIPh3L7OBnYzCumag1p5wT8DgV6piG6Wfe0tr'
 
 exports.register = (req, res) => { 
@@ -93,8 +94,8 @@ exports.logout = (req, res) => {
 
   const {userId, token, tokenExp } = req; 
   console.log("req: ", req);
-  console.log('token: ', token); 
-  console.log('token Exp: ', tokenExp); 
+  console.log('token: ', token);
+  console.log('token Exp: ', tokenExp);
   // We have to delete the JWT token from the headers but unfortunately we don't have 
   // such option to delete the JWT token from the headers. Hence we will replace the JWT
   // token with a blank string which is going to expire in 1 second. 
@@ -125,7 +126,7 @@ exports.forgotPassword =  (req, res) => {
         });
         user.update({resetLink: token})
         sendEmail(user, token)
-        return res.status(200).json({message: "Check your email", token: token}); 
+        return res.status(200).json({message: "Check your email"}); 
       }
     })
   } catch(error) {
@@ -133,17 +134,42 @@ exports.forgotPassword =  (req, res) => {
   }
 }; 
 
+exports.checkValidUserWithRefreshToken = (req, res) => {
+  try{ 
+    console.log('token: ', req.query.token);
+    User.findOne({
+      where : {
+        resetLink: req.query.token 
+      } 
+    }).then(user => {
+      if (!user) {
+        return res.status(404).send({message: "User Not Found"}); 
+      } else {
+        jwt.verify(req.query.token, resetSecret, (error, decoded) => {
+          if (error) {
+            res.status(401).send({message: 'Incorrect Token or expired'}); 
+          }
+          req.userId = decoded.id; 
+        })
+        return res.status(200).send({message: "User is valid", user: user}); 
+      }
+    })
+  } catch(error) {
+    res.status(500).send({message: error.message});
+  }
+}; 
+
 exports.resetPassword = (req, res) => {
   try {
     User.findOne({
       where : {
-        resetLink: req.body.token
+        resetLink: req.query.token
       }
     }).then(user => {
       if (!user) {
         return res.status(404).send({ message: "User Not Found"});
       } else {
-        jwt.verify(req.body.token, resetSecret, (error, decoded) => {
+        jwt.verify(req.query.token, resetSecret, (error, decoded) => {
           if (error) {
             res.status(401).json({message: 'Incorrect Token or expired'}); 
           }
@@ -155,28 +181,33 @@ exports.resetPassword = (req, res) => {
         user.update({password: newPassword, resetLink: ''})
         return res.status(200).json({message: 'Password updated'}); 
       } 
+    }).catch(error => {
+      console.log(error);
     })
   } catch (error) {
     res.status(500).send({message: error.message});
   }
 }; 
 
-// TODO: Debug why email is not being sent. Try nodemail. 
 function sendEmail(user, token) {
-  sgMail.setApiKey(sendGridKey);
-  const msg = {
-    to: user.email,
-    from: "silverbuddy@zohomail.com", // your email
-    subject: "Reset password requested",
-    html: `
-     <a href="http://localhost:4000/api/auth/resetPassword/${token}">${token}</a>
-   `
-  };
+  try {
+      const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+              user: 'peerprepproject@gmail.com',
+              pass: 'PeerPrepProject'
+          },
+      });
+      const link = `http://localhost:3000/resetPassword?token=${token}`
+      transporter.sendMail({
+          from: 'peerprepproject@gmail.com',
+          to: user.email,
+          subject: "Reset password requested",
+          text: `Please follow this link to reset your password: \n` + link + `\n \n This link will be valid for 10 minutes only.`
+      });
 
-  sgMail.send(msg)
-    .then(() => {
-      console.log("Kindly follow the instructions to reset password.", token, user.email);
-  }).catch((error) => {
-      console.error(error);
-  })
+      console.log("email sent sucessfully to " + user.email);
+  } catch (error) {
+      console.log(error, "email not sent");
+  }
 }
