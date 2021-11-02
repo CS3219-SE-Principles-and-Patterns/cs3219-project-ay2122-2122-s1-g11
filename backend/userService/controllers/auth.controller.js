@@ -197,7 +197,7 @@ function sendEmail(user, token) {
               pass: 'PeerPrepProject'
           },
       });
-      const link = `http://${node_env.url}:3000/resetPassword?token=${token}`
+      const link = `http://${node_env.url}:3000/auth/resetPassword?token=${token}`
       transporter.sendMail({
           from: 'peerprepproject@gmail.com',
           to: user.email,

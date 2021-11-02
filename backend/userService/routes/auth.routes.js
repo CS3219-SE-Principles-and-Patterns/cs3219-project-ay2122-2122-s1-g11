@@ -11,7 +11,7 @@ module.exports = function(app) {
   });
 
 app.post(
-  "/api/auth/register",
+  "/auth/register",
   [
     verifyRegister.checkDuplicateUsernameOrEmail,
     verifyRegister.checkRolesExisted, 
@@ -19,13 +19,13 @@ app.post(
   ], controller.register
 );
 
-app.post("/api/auth/login", controller.login);
+app.post("/auth/login", controller.login);
 
-app.post("/api/auth/logout", [verifyRegister.verifyToken], controller.logout); 
+app.post("/auth/logout", [verifyRegister.verifyToken], controller.logout); 
 
-app.patch("/api/auth/forgotPassword", controller.forgotPassword); 
+app.patch("/auth/forgotPassword", controller.forgotPassword); 
 
-app.get("/api/auth/checkValidUser", controller.checkValidUserWithRefreshToken); 
+app.get("/auth/checkValidUser", controller.checkValidUserWithRefreshToken); 
 
-app.put("/resetPassword",[verifyRegister.passwordvalidation], controller.resetPassword);
+app.put("/auth/resetPassword",[verifyRegister.passwordvalidation], controller.resetPassword);
 };
