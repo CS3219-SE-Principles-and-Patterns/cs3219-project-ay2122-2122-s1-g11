@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    ingress.kubernetes.io/rewrite-target: /
+    alb.ingress.kubernetes.io/scheme: internet-facing
+  labels:
+    app: api
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /question/*
+            pathType: Prefix
+            backend:
+              serviceName: question-service
+              servicePort: 3001

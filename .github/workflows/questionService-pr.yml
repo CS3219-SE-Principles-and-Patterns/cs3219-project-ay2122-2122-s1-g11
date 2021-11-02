@@ -1,0 +1,57 @@
+name: Question Service CI/CD Workflow [Master]
+
+on:
+    pull_request:
+        paths:
+        - 'backend/questionService/**'
+        - '.github/workflows/questionService.yml'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        # Service containers to run
+        services:
+            # Label used to access the service container
+            postgres:
+                # Docker Hub image
+                image: postgres
+                # Provide the password for postgres
+                env:
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_USER: postgres
+                # Set health checks to wait until postgres has started
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    # Maps tcp port 5432 on service container to the host
+                    - 5432:5432
+        env:
+            NODE_ENV: test
+
+        strategy:
+            matrix:
+                node-version: [12.x, 14.x, 16.x]
+                # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+        defaults:
+            run:
+                working-directory: ./backend/questionService
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "npm"
+                  cache-dependency-path: backend/questionService/package-lock.json
+            - run: npm ci
+            - run: npm run build --if-present
+            - run: npm install -g db-migrate
+            - run: npm install -g db-migrate-pg
+            - run: db-migrate up initialize
+            - run: npm test
