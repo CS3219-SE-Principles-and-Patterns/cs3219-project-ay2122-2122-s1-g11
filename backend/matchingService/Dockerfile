@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 
 FROM node:14-alpine
-WORKDIR /app
+WORKDIR '/var/www/app'
 COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install
 COPY . .
-EXPOSE 4000
-CMD [ "node", "server.js" ]
-# docker build -t user-service ./userService
+EXPOSE 8000
+CMD [ "node", "app.js" ]
+# docker build -t matching-service ./matchingService
