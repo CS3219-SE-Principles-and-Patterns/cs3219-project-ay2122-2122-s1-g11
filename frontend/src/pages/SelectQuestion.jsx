@@ -7,6 +7,7 @@ import SelectDifficulty from "../components/QuestionSelection/SelectDifficulty";
 import LoadingScreen from "../components/QuestionSelection/LoadingScreen";
 import axios from "axios";
 import ErrorMsgs from "../constants/ErrorMsgs";
+import { endpoints } from "../api/endpoints";
 
 class SelectQuestion extends Component {
     constructor(props) {
@@ -82,7 +83,7 @@ class SelectQuestion extends Component {
                 difficulty: this.state.difficultySelected,
                 category: this.state.categorySelected,
             };
-            axios.post("http://localhost:8000/match/delete", data);
+            axios.post(`${endpoints.matchingService}/delete`, data);
         }
     };
 
@@ -94,7 +95,7 @@ class SelectQuestion extends Component {
             difficulty: this.state.difficultySelected,
             category: this.state.categorySelected,
         };
-        const response = await axios.post("http://localhost:8000/match/create", data);
+        const response = await axios.post(`${endpoints.matchingService}/create`, data);
         if (response.data.matchStatus === "success") {
             // get the random question
             // connect to code collab
@@ -107,7 +108,7 @@ class SelectQuestion extends Component {
 
     // find match is called every 5 seconds to check if the user is matched
     findMatch = async (userId) => {
-        const response = await axios.post("http://localhost:8000/match", {
+        const response = await axios.post(endpoints.matchingService, {
             user: userId,
             difficulty: this.state.difficultySelected,
             category: this.state.categorySelected,
@@ -126,8 +127,7 @@ class SelectQuestion extends Component {
     };
 
     render() {
-        const { difficultySelected, categories, categorySelected, errorMsg, errorMsgDisplay } =
-            this.state;
+        const { difficultySelected, categories, categorySelected, errorMsg, errorMsgDisplay } = this.state;
 
         const SelectType = difficultySelected ? (
             <SelectCategory onSelect={this.onCategorySelect} categories={categories} />
