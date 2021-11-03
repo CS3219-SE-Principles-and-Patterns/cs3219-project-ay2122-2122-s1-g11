@@ -42,7 +42,7 @@ class App extends Component {
                                 <Route path="/forgotPassword">
                                     <ForgotPassword />
                                 </Route>
-                                <Route path="/auth/resetPassword">
+                                <Route path="/resetPassword">
                                     <ResetPassword />
                                 </Route>
                                 <Route path="/" exact>
