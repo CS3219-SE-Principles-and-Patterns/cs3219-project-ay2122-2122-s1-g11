@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const Redis = require('redis');
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
 
 const redisClient = Redis.createClient();
 
@@ -19,9 +20,13 @@ router.post('/create', function(req, res) {
       const partnerKey = value[0];
       redisClient.get(partnerKey, (error, value1) => {
         const lobbyId = uuidv4();
-        redisClient.set('matched' + partnerKey, JSON.stringify({lobbyId, userId}));
-        redisClient.del(partnerKey);
-        return res.json({ matchStatus: "success", matchId: lobbyId, parterId: value1 });
+        axios.get(`http://localhost:3001/questions/${difficulty}?category=${questionType}`).then((response) => {
+          redisClient.set('matched' + partnerKey, JSON.stringify({ lobbyId, userId, question: response.data.questions[0].question }));
+          redisClient.del(partnerKey);
+          return res.json({ matchStatus: "success", matchId: lobbyId, parterId: value1, question: response.data.questions[0].question });
+        }).catch((err) => {
+          console.log('err: ', err);
+        })
       })
     } else {
       redisClient.setex(key, EXPIRY_TIME, userId);
@@ -39,7 +44,7 @@ router.post('/', function(req, res) {
     if (value) {
       const obj = JSON.parse(value);
       redisClient.del('matched' + key);
-      return res.json({ matchStatus: "success", matchId: obj.lobbyId, parterId: obj.userId });
+      return res.json({ matchStatus: "success", matchId: obj.lobbyId, parterId: obj.userId, question: obj.question });
     } else {
       redisClient.get(key, (error, value1) => {
         if (value1) {
@@ -59,6 +64,20 @@ router.post('/delete', function(req, res) {
   const key = difficulty + questionType + userId;
   redisClient.del(key, (error, value) => {
     return res.json(value);
+  })
+})
+
+router.post('/deleteZombie', function(req, res) {
+  const userId = req.body.user;
+  redisClient.keys("*" + userId, (error, value) => {
+    value.forEach((keyToDelete) => {
+      redisClient.del(keyToDelete, (error, value) => {
+        if (error) {
+          console.log(error);
+        }
+        return res.json(value);
+      })
+    })
   })
 })
 
