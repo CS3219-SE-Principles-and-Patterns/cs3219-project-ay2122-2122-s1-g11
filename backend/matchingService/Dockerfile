@@ -6,5 +6,6 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install
 COPY . .
 EXPOSE 8000
-CMD [ "node", "app.js" ]
+# CMD [ "node", "app.js" ]
+CMD ["npm", "start"]
 # docker build -t matching-service ./matchingService

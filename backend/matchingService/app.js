@@ -6,6 +6,7 @@ var logger = require('morgan');
 var queueRouter = require('./routes/match');
 const cors = require("cors");
 const verifyToken = require('./middleware/authJwt');
+require('dotenv').config();
 
 var app = express();
 

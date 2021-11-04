@@ -4,7 +4,12 @@ const Redis = require('redis');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 
-const redisClient = Redis.createClient();
+const redisClient = Redis.createClient(
+  { 
+    host: process.env.REDIS_HOST || 'localhost', // 'docker.for.mac.host.internal' for mac testing
+    password: process.env.REDIS_PASSWORD || null
+  }
+);
 
 const EXPIRY_TIME = 30;
 
@@ -20,7 +25,7 @@ router.post('/create', function(req, res) {
       const partnerKey = value[0];
       redisClient.get(partnerKey, (error, value1) => {
         const lobbyId = uuidv4();
-        axios.get(`http://localhost:3001/questions/${difficulty}?category=${questionType}`).then((response) => {
+        axios.get(`http://localhost:3001/question/${difficulty}?category=${questionType}`).then((response) => {
           redisClient.set('matched' + partnerKey, JSON.stringify({ lobbyId, userId, question: response.data.questions[0].question }));
           redisClient.del(partnerKey);
           return res.json({ matchStatus: "success", matchId: lobbyId, parterId: value1, question: response.data.questions[0].question });
