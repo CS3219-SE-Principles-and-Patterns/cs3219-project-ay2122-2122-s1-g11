@@ -5,6 +5,7 @@ import FeatureSection from "../components/HomePage/FeatureSection";
 import Footer from "../components/HomePage/Footer";
 
 function Home() {
+    console.log("test");
     return (
         <Fragment>
             <HeadSection />
