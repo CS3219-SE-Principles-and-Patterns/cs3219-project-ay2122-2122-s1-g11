@@ -11,7 +11,7 @@ const redisClient = Redis.createClient(
   }
 );
 
-const questionEndpoint = process.env.NODE_ENV == 'production' ? 'question-service.default.svc.cluster.local' : 'localhost:3001';
+const questionEndpoint = process.env.NODE_ENV == 'production' ? 'question-service.default.svc.cluster.local:3001' : 'localhost:3001';
 
 const EXPIRY_TIME = 30;
 
