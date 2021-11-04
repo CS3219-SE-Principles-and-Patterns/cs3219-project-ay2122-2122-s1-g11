@@ -3,6 +3,7 @@ import { Button, TextField, Grid, Paper, Typography, Link } from "@material-ui/c
 import { withStyles } from "@material-ui/styles";
 import axios from "axios";
 import { withRouter } from "react-router";
+import { endpoints } from "../api/endpoints";
 
 const styles = (theme) => ({
     loginForm: {
@@ -55,17 +56,11 @@ class Login extends React.Component {
             password: this.state.password,
         };
         try {
-            const response = await axios.post(
-                "http://localhost:4000/api/auth/register",
-                registerData
-            );
+            const response = await axios.post(`${endpoints.userService}/register`, registerData);
             if (response.data.message === "User was registered successfully!") {
                 // successful register then proceed to login
                 const loginData = { email: this.state.email, password: this.state.password };
-                const response = await axios.post(
-                    "http://localhost:4000/api/auth/login",
-                    loginData
-                );
+                const response = await axios.post(`${endpoints.userService}/login`, loginData);
                 localStorage.setItem("token", response.data.accessToken);
                 localStorage.setItem("id", response.data.id);
                 this.props.history.push("/selectquestion");

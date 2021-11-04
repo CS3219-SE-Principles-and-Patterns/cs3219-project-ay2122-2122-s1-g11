@@ -1,15 +1,7 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import {
-    AppBar,
-    Toolbar,
-    Typography,
-    Button,
-    Hidden,
-    IconButton,
-    withStyles,
-} from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Button, Hidden, IconButton, withStyles } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import HomeIcon from "@material-ui/icons/Home";
 import HowToRegIcon from "@material-ui/icons/HowToReg";
@@ -18,7 +10,8 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import NavigationDrawer from "./NavigationDrawer";
 import { withRouter } from "react-router";
-import axios from 'axios';
+import axios from "axios";
+import { endpoints } from "../../api/endpoints";
 
 const styles = (theme) => ({
     appBar: {
@@ -43,20 +36,18 @@ const styles = (theme) => ({
 });
 
 function NavBar(props) {
-    const {
-        classes,
-        handleMobileDrawerOpen,
-        handleMobileDrawerClose,
-        mobileDrawerOpen,
-        selectedTab,
-    } = props;
+    const { classes, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab } = props;
 
     const logoutUser = () => {
-        axios.post("http://localhost:4000/api/auth/logout", {}, {
-            headers: {
-                "x-access-token": localStorage.getItem('token')
+        axios.post(
+            `${endpoints.userService}/logout`,
+            {},
+            {
+                headers: {
+                    "x-access-token": localStorage.getItem("token"),
+                },
             }
-          })
+        );
         localStorage.removeItem("id");
         localStorage.removeItem("token");
         props.history.push("/");
@@ -102,30 +93,16 @@ function NavBar(props) {
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <div>
-                        <Typography
-                            variant="h4"
-                            className={classes.brandText}
-                            display="inline"
-                            color="primary"
-                        >
+                        <Typography variant="h4" className={classes.brandText} display="inline" color="primary">
                             Peer
                         </Typography>
-                        <Typography
-                            variant="h4"
-                            className={classes.brandText}
-                            display="inline"
-                            color="secondary"
-                        >
+                        <Typography variant="h4" className={classes.brandText} display="inline" color="secondary">
                             Prep
                         </Typography>
                     </div>
                     <div>
                         <Hidden mdUp>
-                            <IconButton
-                                className={classes.menuButton}
-                                onClick={handleMobileDrawerOpen}
-                                aria-label="Open Navigation"
-                            >
+                            <IconButton className={classes.menuButton} onClick={handleMobileDrawerOpen} aria-label="Open Navigation">
                                 <MenuIcon color="primary" />
                             </IconButton>
                         </Hidden>
@@ -140,17 +117,8 @@ function NavBar(props) {
                                 }
                                 if (element.link) {
                                     return (
-                                        <Link
-                                            key={element.name}
-                                            to={element.link}
-                                            className={classes.noDecoration}
-                                            onClick={handleMobileDrawerClose}
-                                        >
-                                            <Button
-                                                color="secondary"
-                                                size="large"
-                                                classes={{ text: classes.menuButtonText }}
-                                            >
+                                        <Link key={element.name} to={element.link} className={classes.noDecoration} onClick={handleMobileDrawerClose}>
+                                            <Button color="secondary" size="large" classes={{ text: classes.menuButtonText }}>
                                                 {element.name}
                                             </Button>
                                         </Link>
