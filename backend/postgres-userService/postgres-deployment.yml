@@ -1,0 +1,42 @@
+# PostgreSQL StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-user
+spec:
+  serviceName: postgres-user
+  selector:
+    matchLabels:
+      app: postgres-user
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres-user
+    spec:
+      containers:
+        - name: postgres-user
+          image: postgres:latest
+          volumeMounts:
+            - name: postgresql-user-db-disk
+              mountPath: /data
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: admin123!@#
+            - name: POSTGRES_DB
+              value: cs3219
+            - name: PGDATA
+              value: /data/pgdata
+  # Volume Claim
+  volumeClaimTemplates:
+    - metadata:
+        name: postgresql-user-db-disk
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
