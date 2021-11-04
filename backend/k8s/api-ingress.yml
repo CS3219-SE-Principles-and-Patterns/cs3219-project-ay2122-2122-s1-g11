@@ -17,3 +17,13 @@ spec:
             backend:
               serviceName: question-service
               servicePort: 3001
+          - path: /auth/*
+            pathType: Prefix
+            backend:
+              serviceName: user-service
+              servicePort: 4000
+          - path: /match/*
+            pathType: Prefix
+            backend:
+              serviceName: matching-service
+              servicePort: 8000

@@ -6,10 +6,20 @@ var logger = require('morgan');
 var queueRouter = require('./routes/match');
 const cors = require("cors");
 const verifyToken = require('./middleware/authJwt');
+require('dotenv').config();
 
 var app = express();
 
 app.use(cors());
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  res.setHeader("Access-Control-Request-Headers", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Request-Method", "GET, POST, PUT, DELETE");
+  next();
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

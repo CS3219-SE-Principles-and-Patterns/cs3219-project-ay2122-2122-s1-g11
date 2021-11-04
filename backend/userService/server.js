@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require("body-parser"); 
 const cors = require("cors"); 
 const app = express(); 
+const dotenv = require('dotenv'); 
+dotenv.config();
 var common = require("./routes/common"); 
 var config = common.config(); 
 
@@ -15,7 +17,7 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({extended: true})); 
 
-const db = require("../userService/models");
+const db = require("./models");
 const Role = db.role;
 
 db.sequelize.sync({force: true}).then(() => {
@@ -39,11 +41,11 @@ function initial() {
     });
   }
 
-require('../userService/routes/auth.routes')(app);
-require('../userService/routes/user.routes')(app);
+require('./routes/auth.routes')(app);
+require('./routes/user.routes')(app);
 
-const hostname = config.url; 
+// const hostname = config.url; 
 const PORT = process.env.PORT || 4000; 
-module.exports = app.listen(PORT, config.url , () => {
-    console.log(`Server running at http://${hostname}:${PORT}/`); 
+module.exports = app.listen(PORT, () => {
+    console.log(`Server listening on port 4000!`); 
 });  

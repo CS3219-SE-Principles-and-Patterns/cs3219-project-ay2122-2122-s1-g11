@@ -10,8 +10,6 @@ const Op = db.Sequelize.Op;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-const dotenv = require('dotenv'); 
-dotenv.config();
 const resetSecret = 'Fn4AvqVAcxYSRp70HZijedbhPpKIPh3L7OBnYzCumag1p5wT8DgV6piG6Wfe0tr'
 
 exports.register = (req, res) => { 
@@ -200,7 +198,7 @@ function sendEmail(user, token) {
               pass: 'PeerPrepProject'
           },
       });
-      const link = `http://${node_env.frontend}/auth/resetPassword?token=${token}`
+      const link = `http://${node_env.frontend}/resetPassword?token=${token}`
       transporter.sendMail({
           from: 'peerprepproject@gmail.com',
           to: user.email,
