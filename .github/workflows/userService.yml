@@ -1,4 +1,4 @@
-name: Collab Service CI/CD Workflow
+name: User Service CI/CD Workflow
 
 on:
   push:
@@ -49,4 +49,4 @@ jobs:
         IMAGE_TAG: user-service                                                                                                          
         RELEASE_IMAGE: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG.${GITHUB_RUN_NUMBER}
       with:                                                                                                         
-        args: set image deployment/user-deployment collab=${{ env.RELEASE_IMAGE }} 
+        args: set image deployment/user-deployment user=${{ env.RELEASE_IMAGE }} 
