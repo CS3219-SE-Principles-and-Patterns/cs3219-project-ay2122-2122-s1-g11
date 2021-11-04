@@ -11,6 +11,8 @@ const redisClient = Redis.createClient(
   }
 );
 
+const questionEndpoint = process.env.NODE_ENV == 'production' ? 'question-service.default.svc.cluster.local' : 'localhost:3001';
+
 const EXPIRY_TIME = 30;
 
 /* GET users listing. */
@@ -25,7 +27,7 @@ router.post('/create', function(req, res) {
       const partnerKey = value[0];
       redisClient.get(partnerKey, (error, value1) => {
         const lobbyId = uuidv4();
-        axios.get(`http://localhost:3001/question/${difficulty}?category=${questionType}`).then((response) => {
+        axios.get(`http://${questionEndpoint}/question/${difficulty}?category=${questionType}`).then((response) => {
           redisClient.set('matched' + partnerKey, JSON.stringify({ lobbyId, userId, question: response.data.questions[0].question }));
           redisClient.del(partnerKey);
           return res.json({ matchStatus: "success", matchId: lobbyId, parterId: value1, question: response.data.questions[0].question });
