@@ -14,6 +14,8 @@ import AuthProvider from "./components/Authentication/AuthContext";
 import PrivateRoute from "./components/Authentication/PrivateRoute";
 import Register from "./pages/Register";
 import QuestionProvider from "./components/QuestionSelection/QuestionContext";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 class App extends Component {
     isAuthenticated = () => {
@@ -40,6 +42,12 @@ class App extends Component {
                                     <PrivateRoute path="/room" component={Room} />
                                     <PrivateRoute path="/selectquestion" component={SelectQuestion} />
                                 </QuestionProvider>
+                                <Route path="/forgotPassword">
+                                    <ForgotPassword />
+                                </Route>
+                                <Route path="/resetPassword">
+                                    <ResetPassword />
+                                </Route>
                                 <Route path="/" exact>
                                     <Home />
                                 </Route>

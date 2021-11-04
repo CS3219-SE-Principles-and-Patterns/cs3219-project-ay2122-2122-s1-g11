@@ -2,6 +2,8 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
 const Role = db.role;
+var common = require("../routes/common"); 
+var node_env = common.config(); 
 
 const Op = db.Sequelize.Op;
 
@@ -94,8 +96,8 @@ exports.logout = (req, res) => {
 
   const {userId, token, tokenExp } = req; 
   console.log("req: ", req);
-  console.log('token: ', token); 
-  console.log('token Exp: ', tokenExp); 
+  console.log('token: ', token);
+  console.log('token Exp: ', tokenExp);
   // We have to delete the JWT token from the headers but unfortunately we don't have 
   // such option to delete the JWT token from the headers. Hence we will replace the JWT
   // token with a blank string which is going to expire in 1 second. 
@@ -136,6 +138,7 @@ exports.forgotPassword =  (req, res) => {
 
 exports.checkValidUserWithRefreshToken = (req, res) => {
   try{ 
+    console.log('token: ', req.query.token);
     User.findOne({
       where : {
         resetLink: req.query.token 
@@ -180,6 +183,8 @@ exports.resetPassword = (req, res) => {
         user.update({password: newPassword, resetLink: ''})
         return res.status(200).json({message: 'Password updated'}); 
       } 
+    }).catch(error => {
+      console.log(error);
     })
   } catch (error) {
     res.status(500).send({message: error.message});
@@ -195,7 +200,7 @@ function sendEmail(user, token) {
               pass: 'PeerPrepProject'
           },
       });
-      const link = `http://localhost:3000/resetPassword?token=${token}`
+      const link = `http://${node_env.frontend}/auth/resetPassword?token=${token}`
       transporter.sendMail({
           from: 'peerprepproject@gmail.com',
           to: user.email,

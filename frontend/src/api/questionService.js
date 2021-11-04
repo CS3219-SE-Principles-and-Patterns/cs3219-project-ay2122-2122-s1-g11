@@ -1,6 +1,7 @@
 import axios from "axios";
+import { endpoints } from "./endpoints";
 
-const qsEndpoint = "http://localhost:3001/questions";
+const qsEndpoint = endpoints.questionService;
 
 export async function getCategoriesAPI(difficulty) {
     const response = await axios.get(`${qsEndpoint}/category/${difficulty}`);

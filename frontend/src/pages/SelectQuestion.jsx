@@ -8,6 +8,7 @@ import LoadingScreen from "../components/QuestionSelection/LoadingScreen";
 import axios from "axios";
 import ErrorMsgs from "../constants/ErrorMsgs";
 import { QuestionContext } from '../components/QuestionSelection/QuestionContext';
+import { endpoints } from "../api/endpoints";
 
 class SelectQuestion extends Component {
     static contextType = QuestionContext
@@ -25,11 +26,10 @@ class SelectQuestion extends Component {
             errorMsgDisplay: "none",
         };
     }
-
     componentDidMount() {
         // clear zombie state
         try {
-            axios.post("http://localhost:8000/match/deleteZombie", {user: localStorage.getItem('id')},
+            axios.post(`${endpoints.matchingService}/deleteZombie`, {user: localStorage.getItem('id')},
             {
               headers: {
                 authorization: 'Bearer ' + localStorage.getItem('token')
@@ -90,12 +90,11 @@ class SelectQuestion extends Component {
                 difficulty: this.state.difficultySelected,
                 category: this.state.categorySelected,
             };
-            axios.post("http://localhost:8000/match/delete", data,
-            {
-              headers: {
-                authorization: 'Bearer ' + localStorage.getItem('token')
-              }
-            });
+            axios.post(`${endpoints.matchingService}/delete`, data, {
+                headers: {
+                  authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+              });
         }
     };
 
@@ -107,13 +106,12 @@ class SelectQuestion extends Component {
             difficulty: this.state.difficultySelected,
             category: this.state.categorySelected,
         };
-        const response = await axios.post("http://localhost:8000/match/create", 
-            data,
-            {
-                headers: {
-                    authorization: 'Bearer ' + localStorage.getItem('token')
-                }
-            });
+        const response = await axios.post(`${endpoints.matchingService}/create`, data,
+        {
+            headers: {
+                authorization: 'Bearer ' + localStorage.getItem('token')
+            }
+        });
         if (response.data.matchStatus === "success") {
             this.setState({ question: response.data.question })
             // get the random question
@@ -127,7 +125,7 @@ class SelectQuestion extends Component {
 
     // find match is called every 5 seconds to check if the user is matched
     findMatch = async (userId) => {
-        const response = await axios.post("http://localhost:8000/match", {
+        const response = await axios.post(endpoints.matchingService, {
             user: userId,
             difficulty: this.state.difficultySelected,
             category: this.state.categorySelected,
@@ -153,8 +151,7 @@ class SelectQuestion extends Component {
     };
 
     render() {
-        const { difficultySelected, categories, categorySelected, errorMsg, errorMsgDisplay } =
-            this.state;
+        const { difficultySelected, categories, categorySelected, errorMsg, errorMsgDisplay } = this.state;
 
         const { question, setQuestion } = this.context;
         if (this.state.question) {

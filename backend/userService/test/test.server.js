@@ -6,7 +6,7 @@ chai.use(chaiHttp);
 var server = require("../server"); 
 
 // Test happy path to register, login and access user content. 
-describe('POST /api/auth/register for user', function() {
+describe('POST /auth/register for user', function() {
     it("Should register a normal user", function (done) {
         let credentials = {
             'username' : 'karthika', 
@@ -14,7 +14,7 @@ describe('POST /api/auth/register for user', function() {
             'password' : 'TestTest'
         }
         chai.request(server)
-            .post('/api/auth/register')
+            .post('/auth/register')
             .send(credentials)
             .end((err, res) => {
                 res.should.have.status(200); 
@@ -23,7 +23,7 @@ describe('POST /api/auth/register for user', function() {
                 console.log("Test user registeration"); 
 
                 chai.request(server)
-                    .post('/api/auth/login')
+                    .post('/auth/login')
                     .send({
                         'email' : 'mdkkarthika@gmail.com', 
                         'password' : 'TestTest'
@@ -39,7 +39,7 @@ describe('POST /api/auth/register for user', function() {
                         var token = respnse.body.token; 
                         
                         chai.request(server) 
-                        .get("/api/content/user")
+                        .get("/auth/content/user")
                         .set('x-access-token', token)
                         .end(function(error, resp) {
                             resp.should.have.status(200); 
@@ -52,7 +52,7 @@ describe('POST /api/auth/register for user', function() {
 }); 
 
 // Test happy path to admin user registeration, login & access admin content 
-describe('POST /api/auth/register for admin', function() {
+describe('POST /auth/register for admin', function() {
     it("Should register an admin user", function (done) {
         let credentials = {
             'username' : 'karthika123', 
@@ -61,7 +61,7 @@ describe('POST /api/auth/register for admin', function() {
             'roles': ["user", "admin"]
         }
         chai.request(server)
-            .post('/api/auth/register')
+            .post('/auth/register')
             .send(credentials)
             .end((err, res) => {
                 res.should.have.status(200); 
@@ -70,7 +70,7 @@ describe('POST /api/auth/register for admin', function() {
                 console.log("Test user registeration"); 
 
                 chai.request(server)
-                    .post('/api/auth/login')
+                    .post('/auth/login')
                     .send({
                         'email' : 'mdkkarthika123@gmail.com', 
                         'password' : 'TestTest'
@@ -86,7 +86,7 @@ describe('POST /api/auth/register for admin', function() {
                         var token = respnse.body.token; 
                         
                         chai.request(server) 
-                        .get("/api/content/admin")
+                        .get("/auth/content/admin")
                         .set('x-access-token', token)
                         .end(function(error, resp) {
                             resp.should.have.status(200); 
@@ -100,7 +100,7 @@ describe('POST /api/auth/register for admin', function() {
 
 
 // Test registeration with unacceptable password
-describe('POST /api/auth/register with unacceptable password', function() {
+describe('POST /auth/register with unacceptable password', function() {
     it("Should not accept passwords that do not meet requirement", function (done) {
         let credentials = {
             'username' : 'karthika', 
@@ -108,7 +108,7 @@ describe('POST /api/auth/register with unacceptable password', function() {
             'password' : 'test'
         }
         chai.request(server)
-            .post('/api/auth/register')
+            .post('/auth/register')
             .send(credentials)
             .end((err, res) => {
                 res.should.have.status(400); 
@@ -122,7 +122,7 @@ describe('POST /api/auth/register with unacceptable password', function() {
 
 
 // Registeration and login passwords do not match 
-describe('POST /api/auth/register with password that does not match', function() {
+describe('POST /auth/register with password that does not match', function() {
     it("Should not login a user whose password does not match", function (done) {
         let credentials = {
             'username' : 'karthika', 
@@ -130,7 +130,7 @@ describe('POST /api/auth/register with password that does not match', function()
             'password' : 'TestTest'
         }
         chai.request(server)
-            .post('/api/auth/register')
+            .post('/auth/register')
             .send(credentials)
             .end((err, res) => {
                 res.should.have.status(200); 
@@ -139,7 +139,7 @@ describe('POST /api/auth/register with password that does not match', function()
                 console.log("Test user registeration"); 
 
                 chai.request(server)
-                    .post('/api/auth/login')
+                    .post('/auth/login')
                     .send({
                         'email' : 'mdkkarthika@gmail.com', 
                         'password' : 'test'
@@ -157,7 +157,7 @@ describe('POST /api/auth/register with password that does not match', function()
 
 
 // User already registered. 
-describe('POST /api/auth/register with user already registered', function() {
+describe('POST /auth/register with user already registered', function() {
     it("Should not register already registered user", function (done) {
         let credentials = {
             'username' : 'karthika', 
@@ -165,7 +165,7 @@ describe('POST /api/auth/register with user already registered', function() {
             'password' : 'TestTest'
         }
         chai.request(server)
-            .post('/api/auth/register')
+            .post('/auth/register')
             .send(credentials)
             .end((err, res) => {
                 res.should.have.status(200); 
@@ -174,7 +174,7 @@ describe('POST /api/auth/register with user already registered', function() {
                 console.log("Test user registeration"); 
 
                 chai.request(server)
-                    .post('/api/auth/register')
+                    .post('/auth/register')
                     .send(credentials)
                     .end((error, response) => {
                         console.log("User already registered"); 
@@ -197,7 +197,7 @@ describe('POST /api/auth/register with invalid role', function() {
             'roles': ["user", "bye"]
         }
         chai.request(server)
-            .post('/api/auth/register')
+            .post('/auth/register')
             .send(credentials)
             .end((err, res) => {
                 res.should.have.status(400); 
@@ -218,7 +218,7 @@ describe('Forgot Password', function() {
             'password' : 'TestTest'
         }
         chai.request(server)
-            .post('/api/auth/register')
+            .post('/auth/register')
             .send(credentials)
             .end((err, res) => {
                 res.should.have.status(200); 
@@ -227,7 +227,7 @@ describe('Forgot Password', function() {
                 console.log("Test user registeration"); 
 
                 chai.request(server)
-                    .post('/api/auth/login')
+                    .post('/auth/login')
                     .send({
                         'email' : 'mdkkarthika@gmail.com', 
                         'password' : 'TestTest'
@@ -243,7 +243,7 @@ describe('Forgot Password', function() {
                         var token = respnse.body.token; 
                         
                         chai.request(server) 
-                        .patch("/api/auth/forgotPassword")
+                        .patch("/auth/forgotPassword")
                         .set('x-access-token', token)
                         .send({
                             'email' : 'mdkkarthika@gmail.com'
@@ -255,7 +255,7 @@ describe('Forgot Password', function() {
                             var resetToken = resp.body.token; 
 
                             chai.request(server)
-                            .put("/api/auth/resetPassword")
+                            .put("/auth/resetPassword")
                             .query({token: resetToken})
                             .send({
                                 "password" : "NewTestTest"

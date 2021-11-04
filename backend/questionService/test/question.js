@@ -12,7 +12,7 @@ describe("Queries", function () {
     describe("Setup", function () {
         it("Should return that the application is running", function (done) {
             chai.request(app)
-                .get("/questions")
+                .get("/question")
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
@@ -25,7 +25,7 @@ describe("Queries", function () {
     describe("Get Question", function () {
         it("Should return that the EASY question is SUCCESSFULLY received", function (done) {
             chai.request(app)
-                .get(`/questions/${DIFFICULTY.easy}`)
+                .get(`/question/${DIFFICULTY.easy}`)
                 .query({ category: CATEGORY.array })
                 .end((err, res) => {
                     res.status.should.equal(200);
@@ -41,7 +41,7 @@ describe("Queries", function () {
 
         it("Should return that the MEDIUM question is SUCCESSFULLY received", function (done) {
             chai.request(app)
-                .get(`/questions/${DIFFICULTY.medium}`)
+                .get(`/question/${DIFFICULTY.medium}`)
                 .query({ category: CATEGORY.trees })
                 .end((err, res) => {
                     res.status.should.equal(200);
@@ -57,7 +57,7 @@ describe("Queries", function () {
 
         it("Should return that the HARD question is SUCCESSFULLY received", function (done) {
             chai.request(app)
-                .get(`/questions/${DIFFICULTY.hard}`)
+                .get(`/question/${DIFFICULTY.hard}`)
                 .query({ category: CATEGORY.dp })
                 .end((err, res) => {
                     res.status.should.equal(200);
@@ -75,7 +75,7 @@ describe("Queries", function () {
     describe("Get Category", function () {
         it("Should return that the EASY question CATEGORY is SUCCESSFULLY received", function (done) {
             chai.request(app)
-                .get(`/questions/category/${DIFFICULTY.easy}`)
+                .get(`/question/category/${DIFFICULTY.easy}`)
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
@@ -88,7 +88,7 @@ describe("Queries", function () {
 
         it("Should return that the MEDIUM question CATEGORY is SUCCESSFULLY received", function (done) {
             chai.request(app)
-                .get(`/questions/category/${DIFFICULTY.medium}`)
+                .get(`/question/category/${DIFFICULTY.medium}`)
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
@@ -101,7 +101,7 @@ describe("Queries", function () {
 
         it("Should return that the HARD question CATEGORY is SUCCESSFULLY received", function (done) {
             chai.request(app)
-                .get(`/questions/category/${DIFFICULTY.hard}`)
+                .get(`/question/category/${DIFFICULTY.hard}`)
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
@@ -116,7 +116,7 @@ describe("Queries", function () {
     describe("Create Question", function () {
         it("Should return that the question is created successfully", function (done) {
             chai.request(app)
-                .post("/questions/add")
+                .post("/question/add")
                 .send({
                     difficulty: DIFFICULTY.easy,
                     category: CATEGORY.array,
@@ -133,7 +133,7 @@ describe("Queries", function () {
 
         it("Should return that the question creation fails", function (done) {
             chai.request(app)
-                .post("/questions/add")
+                .post("/question/add")
                 .send({
                     difficulty: DIFFICULTY.easy,
                     category: CATEGORY.array,
@@ -153,7 +153,7 @@ describe("Queries", function () {
         it("Should return that the question is successfully deleted", function (done) {
             id = 1;
             chai.request(app)
-                .delete(`/questions/delete/${id}`)
+                .delete(`/question/delete/${id}`)
                 .end((err, res) => {
                     res.status.should.equal(200);
                     res.type.should.equal("application/json");
@@ -165,7 +165,7 @@ describe("Queries", function () {
         it("Should return that the question fails to delete", function (done) {
             id = 100;
             chai.request(app)
-                .delete(`/questions/delete/${id}`)
+                .delete(`/question/delete/${id}`)
                 .end((err, res) => {
                     res.status.should.equal(400);
                     res.type.should.equal("application/json");
@@ -179,7 +179,7 @@ describe("Queries", function () {
         it("Should return that the question is updated", function (done) {
             id = 2;
             chai.request(app)
-                .put(`/questions/update/${id}`)
+                .put(`/question/update/${id}`)
                 .send({
                     difficulty: DIFFICULTY.easy,
                     category: CATEGORY.array,
@@ -197,7 +197,7 @@ describe("Queries", function () {
         it("Should return that the question fails to update", function (done) {
             id = 100;
             chai.request(app)
-                .put(`/questions/update/${id}`)
+                .put(`/question/update/${id}`)
                 .send({
                     difficulty: DIFFICULTY.easy,
                     category: CATEGORY.array,

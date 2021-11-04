@@ -26,6 +26,6 @@ app.use(function (req, res, next) {
 //Routes
 const questionRoutes = require("./routes/questions");
 
-app.use("/questions", questionRoutes);
+app.use("/question", questionRoutes);
 
 module.exports = app;
