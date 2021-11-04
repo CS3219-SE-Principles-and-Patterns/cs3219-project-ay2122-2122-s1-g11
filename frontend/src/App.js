@@ -13,6 +13,7 @@ import NavBarManager from "./components/navigation/NavBarManager";
 import AuthProvider from "./components/Authentication/AuthContext";
 import PrivateRoute from "./components/Authentication/PrivateRoute";
 import Register from "./pages/Register";
+import QuestionProvider from "./components/QuestionSelection/QuestionContext";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
@@ -31,14 +32,16 @@ class App extends Component {
                         <NavBarManager isAuthenticated={this.isAuthenticated} />
                         <div style={{ paddingTop: "60px", textAlign: "center" }}>
                             <Switch>
-                                <PrivateRoute path="/room" component={Room} />
                                 <Route path="/login">
                                     <Login />
                                 </Route>
                                 <Route path="/register">
                                     <Register />
                                 </Route>
-                                <PrivateRoute path="/selectquestion" component={SelectQuestion} />
+                                <QuestionProvider>
+                                    <PrivateRoute path="/room" component={Room} />
+                                    <PrivateRoute path="/selectquestion" component={SelectQuestion} />
+                                </QuestionProvider>
                                 <Route path="/forgotPassword">
                                     <ForgotPassword />
                                 </Route>
