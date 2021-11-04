@@ -22,3 +22,8 @@ spec:
             backend:
               serviceName: user-service
               servicePort: 4000
+          - path: /match/*
+            pathType: Prefix
+            backend:
+              serviceName: matching-service
+              servicePort: 8000
