@@ -1,6 +1,7 @@
 // Setup
 const express = require("express");
 const bodyParser = require("body-parser");
+const verifyToken = require('./middleware/authJwt');
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,6 +23,9 @@ app.use(function (req, res, next) {
     res.setHeader("Access-Control-Request-Method", "GET, POST, PUT, DELETE");
     next();
 });
+
+// Protect all routes with JWT auth
+app.use((req, res, next) => verifyToken(req, res, next));
 
 //Routes
 const questionRoutes = require("./routes/questions");

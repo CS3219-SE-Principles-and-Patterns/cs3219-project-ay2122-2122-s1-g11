@@ -27,7 +27,11 @@ router.post('/create', function(req, res) {
       const partnerKey = value[0];
       redisClient.get(partnerKey, (error, value1) => {
         const lobbyId = uuidv4();
-        axios.get(`http://${questionEndpoint}/question/${difficulty}?category=${questionType}`).then((response) => {
+        axios.get(`http://${questionEndpoint}/question/${difficulty}?category=${questionType}`, {
+          headers: {
+            authorization: 'Bearer ' + req.bearerToken
+          }
+        }).then((response) => {
           redisClient.set('matched' + partnerKey, JSON.stringify({ lobbyId, userId, question: response.data.questions[0].question }));
           redisClient.del(partnerKey);
           return res.json({ matchStatus: "success", matchId: lobbyId, parterId: value1, question: response.data.questions[0].question });
