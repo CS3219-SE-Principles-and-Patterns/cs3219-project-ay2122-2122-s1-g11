@@ -56,7 +56,6 @@ class SelectQuestion extends Component {
 
     onCategorySelect = async (event) => {
         const category = event.target.innerText.toLowerCase();
-        // this.getRandomQuestion(category);
         this.setState({ categorySelected: category }, () => {
             this.setState({ loadingState: true });
             this.createMatch();
