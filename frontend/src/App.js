@@ -48,9 +48,11 @@ class App extends Component {
                                     <Home />
                                 </Route>
                                 <QuestionProvider>
-                                    <PrivateRoute path="/room" component={Room} />
-                                    <PrivateRoute path="/selectquestion" component={SelectQuestion} />
-                                    <Route path="/" component={ErrorPage} />
+                                    <Switch>
+                                        <PrivateRoute path="/room" component={Room} />
+                                        <PrivateRoute path="/selectquestion" component={SelectQuestion} />
+                                        <Route path="/" component={ErrorPage} />
+                                    </Switch>
                                 </QuestionProvider>
                             </Switch>
                         </div>
