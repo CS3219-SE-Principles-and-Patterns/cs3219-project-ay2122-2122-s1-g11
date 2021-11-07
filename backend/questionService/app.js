@@ -22,9 +22,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-var environment = process.env.NODE_ENV || "development";
-
-if (environment !== "test") {
+if (process.env.NODE_ENV !== "test") {
     // Protect all routes with JWT auth
     app.use((req, res, next) => verifyToken(req, res, next));
 }
