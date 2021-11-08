@@ -7,11 +7,11 @@ import SelectDifficulty from "../components/QuestionSelection/SelectDifficulty";
 import LoadingScreen from "../components/QuestionSelection/LoadingScreen";
 import axios from "axios";
 import ErrorMsgs from "../constants/ErrorMsgs";
-import { QuestionContext } from '../components/QuestionSelection/QuestionContext';
+import { QuestionContext } from "../components/QuestionSelection/QuestionContext";
 import { endpoints } from "../api/endpoints";
 
 class SelectQuestion extends Component {
-    static contextType = QuestionContext
+    static contextType = QuestionContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -29,16 +29,18 @@ class SelectQuestion extends Component {
     componentDidMount() {
         // clear zombie state
         try {
-            axios.post(`${endpoints.matchingService}/deleteZombie`, {user: localStorage.getItem('id')},
-            {
-              headers: {
-                authorization: 'Bearer ' + localStorage.getItem('token')
-              }
-            });
+            axios.post(
+                `${endpoints.matchingService}/deleteZombie`,
+                { user: localStorage.getItem("id") },
+                {
+                    headers: {
+                        authorization: "Bearer " + localStorage.getItem("token"),
+                    },
+                }
+            );
         } catch (e) {
             console.log(e);
         }
-        
     }
 
     componentWillUnmount() {
@@ -91,29 +93,28 @@ class SelectQuestion extends Component {
             };
             axios.post(`${endpoints.matchingService}/delete`, data, {
                 headers: {
-                  authorization: 'Bearer ' + localStorage.getItem('token')
-                }
-              });
+                    authorization: "Bearer " + localStorage.getItem("token"),
+                },
+            });
         }
     };
 
     createMatch = async () => {
-        const userId = localStorage.getItem('id');
+        const userId = localStorage.getItem("id");
         this.setState({ userId });
         const data = {
             user: userId,
             difficulty: this.state.difficultySelected,
             category: this.state.categorySelected,
         };
-        const response = await axios.post(`${endpoints.matchingService}/create`, data,
-        {
+        const response = await axios.post(`${endpoints.matchingService}/create`, data, {
             headers: {
-                authorization: 'Bearer ' + localStorage.getItem('token')
-            }
+                authorization: "Bearer " + localStorage.getItem("token"),
+            },
         });
         if (response.data.matchStatus === "success") {
             this.setState({ question: response.data.question });
-            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem('username')}`);
+            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem("username")}`);
         } else if (response.data.matchStatus === "waiting") {
             const interval = setInterval(() => this.findMatch(userId), 5000);
             this.setState({ intervalId: interval });
@@ -122,26 +123,29 @@ class SelectQuestion extends Component {
 
     // find match is called every 5 seconds to check if the user is matched
     findMatch = async (userId) => {
-        const response = await axios.post(endpoints.matchingService, {
-            user: userId,
-            difficulty: this.state.difficultySelected,
-            category: this.state.categorySelected,
-        },
-        {
-          headers: {
-            authorization: 'Bearer ' + localStorage.getItem('token')
-          }
-        });
+        const response = await axios.post(
+            endpoints.matchingService,
+            {
+                user: userId,
+                difficulty: this.state.difficultySelected,
+                category: this.state.categorySelected,
+            },
+            {
+                headers: {
+                    authorization: "Bearer " + localStorage.getItem("token"),
+                },
+            }
+        );
         console.log("findMatch response: ", response.data);
         if (response.data.matchStatus == "failed") {
-            console.log('failed acivated')
+            console.log("failed acivated");
             this.setState({ loadingState: false });
             clearInterval(this.state.intervalId);
         } else if (response.data.matchStatus == "success") {
             clearInterval(this.state.intervalId);
             this.setState({ intervalId: null });
-            this.setState({ question: response.data.question })
-            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem('username')}`);
+            this.setState({ question: response.data.question });
+            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem("username")}`);
         }
     };
 
@@ -158,11 +162,6 @@ class SelectQuestion extends Component {
         ) : (
             <SelectDifficulty onSelect={this.onDifficultySelect} />
         );
-
-        // if (difficultySelected && categorySelected) {
-        //     this.props.history.push("/room");
-        //     this.setState({ difficultySelected: "", categorySelected: "" });
-        // }
 
         return (
             <React.Fragment>
