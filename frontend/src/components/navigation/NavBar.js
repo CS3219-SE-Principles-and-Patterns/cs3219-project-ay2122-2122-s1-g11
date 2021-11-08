@@ -146,6 +146,7 @@ function NavBar(props) {
                 open={mobileDrawerOpen}
                 selectedItem={selectedTab}
                 onClose={handleMobileDrawerClose}
+                isAuthenticated={props.isAuthenticated}
             />
         </div>
     );
