@@ -1,10 +1,12 @@
 name: Collab Service CI/CD Workflow
 
 on:
-  push:
-    paths:
-    - 'backend/collaborationService/**'
-    - '.github/workflows/collabService.yml'
+    push:
+        branches:
+        - master
+        paths:
+        - 'backend/collaborationService/**'
+        - '.github/workflows/collabService.yml'
 
 jobs:
   deploy: 
