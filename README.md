@@ -28,7 +28,12 @@ The User Service runs on port 4000.
 ### Question Service
 **Prerequisites:**
 
-Question service requires Postgresql to be installed locally. Database environmental variables can be edited in the following file: `/backend/questionService/database.json`
+Question service requires Postgresql to be installed locally. Database environmental variables can be edited in the following file: `/backend/questionService/database.json` and also `/backend/questionService/services/knexfile.js`.
+
+At the start, you can choose to build the SQL tables and default values using db-migration by following the steps below:
+1. Run `npm install -g db-migrate` and `npm install -g db-migrate-pg` (For First timer)
+2. Run `db-migrate up initialize` in the questionService folder
+3. Tables containing default values will be built.
 
 **Starting the server:**
 
