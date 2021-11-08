@@ -69,7 +69,7 @@ class ResetPassword extends React.Component {
                         >
                             <Grid item>
                                 <Typography className={classes.formTitle} component="h1" variant="h5">
-                                    Forgot Password
+                                    Reset Password
                                 </Typography>
                             </Grid>
                             <Grid item>
