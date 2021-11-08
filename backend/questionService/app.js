@@ -1,18 +1,16 @@
 // Setup
 const express = require("express");
 const bodyParser = require("body-parser");
-const verifyToken = require('./middleware/authJwt');
+const verifyToken = require("./middleware/authJwt");
 
 const app = express();
 app.use(bodyParser.json());
 
 // dotenv
-require('dotenv').config()
+require("dotenv").config();
 
 // Cors to fix the CORS policy: No 'Access-Control-Allow-Origin' error so that we can fetch from frontend
 const cors = require("cors");
-
-
 
 app.use(cors());
 app.use(function (req, res, next) {
@@ -24,8 +22,10 @@ app.use(function (req, res, next) {
     next();
 });
 
-// Protect all routes with JWT auth
-app.use((req, res, next) => verifyToken(req, res, next));
+if (process.env.NODE_ENV !== "test") {
+    // Protect all routes with JWT auth
+    app.use((req, res, next) => verifyToken(req, res, next));
+}
 
 //Routes
 const questionRoutes = require("./routes/questions");
