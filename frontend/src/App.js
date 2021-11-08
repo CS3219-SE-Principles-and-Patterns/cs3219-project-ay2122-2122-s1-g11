@@ -38,10 +38,6 @@ class App extends Component {
                                 <Route path="/register">
                                     <Register />
                                 </Route>
-                                <QuestionProvider>
-                                    <PrivateRoute path="/room" component={Room} />
-                                    <PrivateRoute path="/selectquestion" component={SelectQuestion} />
-                                </QuestionProvider>
                                 <Route path="/forgotPassword">
                                     <ForgotPassword />
                                 </Route>
@@ -51,9 +47,13 @@ class App extends Component {
                                 <Route path="/" exact>
                                     <Home />
                                 </Route>
-                                <Route path="/">
-                                    <ErrorPage />
-                                </Route>
+                                <QuestionProvider>
+                                    <Switch>
+                                        <PrivateRoute path="/room" component={Room} />
+                                        <PrivateRoute path="/selectquestion" component={SelectQuestion} />
+                                        <Route path="/" component={ErrorPage} />
+                                    </Switch>
+                                </QuestionProvider>
                             </Switch>
                         </div>
                     </AuthProvider>
