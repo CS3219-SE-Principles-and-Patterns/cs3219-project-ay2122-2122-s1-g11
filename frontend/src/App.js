@@ -13,6 +13,7 @@ import NavBarManager from "./components/navigation/NavBarManager";
 import AuthProvider from "./components/Authentication/AuthContext";
 import PrivateRoute from "./components/Authentication/PrivateRoute";
 import Register from "./pages/Register";
+import QuestionProvider from "./components/QuestionSelection/QuestionContext";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
@@ -31,14 +32,12 @@ class App extends Component {
                         <NavBarManager isAuthenticated={this.isAuthenticated} />
                         <div style={{ paddingTop: "60px", textAlign: "center" }}>
                             <Switch>
-                                <PrivateRoute path="/room" component={Room} />
                                 <Route path="/login">
                                     <Login />
                                 </Route>
                                 <Route path="/register">
                                     <Register />
                                 </Route>
-                                <PrivateRoute path="/selectquestion" component={SelectQuestion} />
                                 <Route path="/forgotPassword">
                                     <ForgotPassword />
                                 </Route>
@@ -48,9 +47,13 @@ class App extends Component {
                                 <Route path="/" exact>
                                     <Home />
                                 </Route>
-                                <Route path="/">
-                                    <ErrorPage />
-                                </Route>
+                                <QuestionProvider>
+                                    <Switch>
+                                        <PrivateRoute path="/room" component={Room} />
+                                        <PrivateRoute path="/selectquestion" component={SelectQuestion} />
+                                        <Route path="/" component={ErrorPage} />
+                                    </Switch>
+                                </QuestionProvider>
                             </Switch>
                         </div>
                     </AuthProvider>

@@ -1,26 +1,44 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { getCategoriesAPI, getRandomQuestionAPI } from "../api/questionService";
+import { getCategoriesAPI } from "../api/questionService";
 import ErrorAlert from "../components/Others/ErrorAlert";
 import SelectCategory from "../components/QuestionSelection/SelectCategory";
 import SelectDifficulty from "../components/QuestionSelection/SelectDifficulty";
 import LoadingScreen from "../components/QuestionSelection/LoadingScreen";
 import axios from "axios";
 import ErrorMsgs from "../constants/ErrorMsgs";
+import { QuestionContext } from '../components/QuestionSelection/QuestionContext';
+import { endpoints } from "../api/endpoints";
 
 class SelectQuestion extends Component {
+    static contextType = QuestionContext
     constructor(props) {
         super(props);
         this.state = {
             difficultySelected: "",
             categories: [],
             categorySelected: "",
+            question: "",
             loadingState: false,
             userId: null, // update userId to be Id from database
             intervalId: null,
             errorMsg: "",
             errorMsgDisplay: "none",
         };
+    }
+    componentDidMount() {
+        // clear zombie state
+        try {
+            axios.post(`${endpoints.matchingService}/deleteZombie`, {user: localStorage.getItem('id')},
+            {
+              headers: {
+                authorization: 'Bearer ' + localStorage.getItem('token')
+              }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+        
     }
 
     componentWillUnmount() {
@@ -38,7 +56,6 @@ class SelectQuestion extends Component {
 
     onCategorySelect = async (event) => {
         const category = event.target.innerText.toLowerCase();
-        // this.getRandomQuestion(category);
         this.setState({ categorySelected: category }, () => {
             this.setState({ loadingState: true });
             this.createMatch();
@@ -60,16 +77,6 @@ class SelectQuestion extends Component {
         }
     };
 
-    getRandomQuestion = async (category) => {
-        const result = await getRandomQuestionAPI(this.state.difficultySelected, category);
-        if (result.status === 200) {
-            const question = result.data.questions[0];
-            console.log(question);
-        } else {
-            this.setState({ errorMsg: ErrorMsgs.noQuestionAPI, errorMsgDisplay: "" });
-        }
-    };
-
     loadingScreenHandleClose = () => {
         this.setState({ loadingState: false });
         if (this.state.intervalId) {
@@ -82,52 +89,73 @@ class SelectQuestion extends Component {
                 difficulty: this.state.difficultySelected,
                 category: this.state.categorySelected,
             };
-            axios.post("http://localhost:8000/match/delete", data);
+            axios.post(`${endpoints.matchingService}/delete`, data, {
+                headers: {
+                  authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+              });
         }
     };
 
     createMatch = async () => {
-        const randomNumber = Math.floor(Math.random() * 1000);
-        this.setState({ userId: randomNumber });
+        const userId = localStorage.getItem('id');
+        this.setState({ userId });
         const data = {
-            user: randomNumber,
+            user: userId,
             difficulty: this.state.difficultySelected,
             category: this.state.categorySelected,
         };
-        const response = await axios.post("http://localhost:8000/match/create", data);
+        const response = await axios.post(`${endpoints.matchingService}/create`, data,
+        {
+            headers: {
+                authorization: 'Bearer ' + localStorage.getItem('token')
+            }
+        });
         if (response.data.matchStatus === "success") {
+            this.setState({ question: response.data.question })
             // get the random question
             // connect to code collab
-            this.props.history.push("/room");
+            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem('id')}`);
         } else if (response.data.matchStatus === "waiting") {
-            const interval = setInterval(() => this.findMatch(randomNumber), 5000);
+            const interval = setInterval(() => this.findMatch(userId), 5000);
             this.setState({ intervalId: interval });
         }
     };
 
     // find match is called every 5 seconds to check if the user is matched
     findMatch = async (userId) => {
-        const response = await axios.post("http://localhost:8000/match", {
+        const response = await axios.post(endpoints.matchingService, {
             user: userId,
             difficulty: this.state.difficultySelected,
             category: this.state.categorySelected,
+        },
+        {
+          headers: {
+            authorization: 'Bearer ' + localStorage.getItem('token')
+          }
         });
-        console.log("findMatch response: ", response);
-        if (response.data.matchStatus === "failed") {
+        console.log("findMatch response: ", response.data);
+        if (response.data.matchStatus == "failed") {
+            console.log('failed acivated')
             this.setState({ loadingState: false });
             clearInterval(this.state.intervalId);
-        } else if (response.data.matchStatus === "success") {
+        } else if (response.data.matchStatus == "success") {
             clearInterval(this.state.intervalId);
             this.setState({ intervalId: null });
-            this.props.history.push("/room");
+            this.setState({ question: response.data.question })
+            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem('id')}`);
             // get the random question
             // connect to code collab
         }
     };
 
     render() {
-        const { difficultySelected, categories, categorySelected, errorMsg, errorMsgDisplay } =
-            this.state;
+        const { difficultySelected, categories, categorySelected, errorMsg, errorMsgDisplay } = this.state;
+
+        const { question, setQuestion } = this.context;
+        if (this.state.question) {
+            setQuestion(this.state.question);
+        }
 
         const SelectType = difficultySelected ? (
             <SelectCategory onSelect={this.onCategorySelect} categories={categories} />
@@ -135,10 +163,10 @@ class SelectQuestion extends Component {
             <SelectDifficulty onSelect={this.onDifficultySelect} />
         );
 
-        if (difficultySelected && categorySelected) {
-            this.props.history.push("/room");
-            this.setState({ difficultySelected: "", categorySelected: "" });
-        }
+        // if (difficultySelected && categorySelected) {
+        //     this.props.history.push("/room");
+        //     this.setState({ difficultySelected: "", categorySelected: "" });
+        // }
 
         return (
             <React.Fragment>
