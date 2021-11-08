@@ -18,6 +18,9 @@ const styles = (theme) => ({
         minHeight: "30vh",
         padding: "50px",
     },
+    formTitle: {
+        marginBottom: '0.2em'
+    }
 });
 
 class ForgotPassword extends React.Component {
@@ -59,7 +62,7 @@ class ForgotPassword extends React.Component {
                             className={classes.loginBackground}
                         >
                             <Grid item>
-                                <Typography component="h1" variant="h5">
+                                <Typography className={classes.formTitle} component="h1" variant="h5">
                                     Forgot Password
                                 </Typography>
                             </Grid>
@@ -83,15 +86,9 @@ class ForgotPassword extends React.Component {
                                                 autoFocus
                                             />
                                         </Grid>
-                                        {this.state.error && (
-                                            <Grid item>
-                                                <Typography
-                                                    color="error"
-                                                >
-                                                    {this.state.message}
-                                                </Typography>
-                                            </Grid>
-                                        )}
+                                        <Grid item>
+                                            <Typography color={this.state.error ? "error" : "textSecondary"}>{this.state.message}</Typography>
+                                        </Grid>
                                         <Grid item>
                                             <Button
                                                 variant="contained"

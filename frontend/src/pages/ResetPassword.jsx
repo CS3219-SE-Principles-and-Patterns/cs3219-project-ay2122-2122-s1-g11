@@ -18,6 +18,9 @@ const styles = (theme) => ({
         minHeight: "30vh",
         padding: "50px",
     },
+    formTitle: {
+        marginBottom: '0.2em'
+    }
 });
 
 class ResetPassword extends React.Component {
@@ -35,9 +38,8 @@ class ResetPassword extends React.Component {
             this.setState({ error: true });
             return;
         } else {
-            console.log('link: ', this.props.history)
             axios
-                .put(`${endpoints.userService}/resetPassword${this.props.history}`, { password: this.state.password2 })
+                .put(`${endpoints.userService}/resetPassword${this.props.history.location.search}`, { password: this.state.password2 })
                 .then((response) => {
                     this.setState({ message: response.data.message });
                 })
@@ -66,7 +68,7 @@ class ResetPassword extends React.Component {
                             className={classes.loginBackground}
                         >
                             <Grid item>
-                                <Typography component="h1" variant="h5">
+                                <Typography className={classes.formTitle} component="h1" variant="h5">
                                     Forgot Password
                                 </Typography>
                             </Grid>
@@ -107,15 +109,9 @@ class ResetPassword extends React.Component {
                                                 autoFocus
                                             />
                                         </Grid>
-                                        {this.state.error && (
-                                            <Grid item>
-                                                <Typography
-                                                    color="error"
-                                                >
-                                                    {this.state.message}
-                                                </Typography>
-                                            </Grid>
-                                        )}
+                                        <Grid item>
+                                            <Typography color={this.state.error ? "error" : "textSecondary"}>{this.state.message}</Typography>
+                                        </Grid>
                                         <Grid item>
                                             <Button
                                                 variant="contained"
