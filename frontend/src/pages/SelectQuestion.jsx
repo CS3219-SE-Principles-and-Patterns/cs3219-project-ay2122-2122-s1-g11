@@ -114,9 +114,7 @@ class SelectQuestion extends Component {
         });
         if (response.data.matchStatus === "success") {
             this.setState({ question: response.data.question });
-            // get the random question
-            // connect to code collab
-            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem("id")}`);
+            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem("username")}`);
         } else if (response.data.matchStatus === "waiting") {
             const interval = setInterval(() => this.findMatch(userId), 5000);
             this.setState({ intervalId: interval });
@@ -147,16 +145,14 @@ class SelectQuestion extends Component {
             clearInterval(this.state.intervalId);
             this.setState({ intervalId: null });
             this.setState({ question: response.data.question });
-            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem("id")}`);
-            // get the random question
-            // connect to code collab
+            this.props.history.push(`/room?id=${response.data.matchId}&user=${localStorage.getItem("username")}`);
         }
     };
 
     render() {
         const { difficultySelected, categories, errorMsg, errorMsgDisplay } = this.state;
 
-        const { question, setQuestion } = this.context;
+        const { setQuestion } = this.context;
         if (this.state.question) {
             setQuestion(this.state.question);
         }

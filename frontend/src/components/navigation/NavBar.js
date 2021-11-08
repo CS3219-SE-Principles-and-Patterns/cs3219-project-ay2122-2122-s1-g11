@@ -50,6 +50,7 @@ function NavBar(props) {
         );
         localStorage.removeItem("id");
         localStorage.removeItem("token");
+        localStorage.removeItem("username");
         props.history.push("/");
     };
 
