@@ -52,7 +52,8 @@ const Room = () => {
                                 flex: 1,
                             }}>
                                 <Chatbox 
-                                    roomNo={getRoomId()} />
+                                    roomNo={getRoomId()}
+                                    user={getUserId()} />
                         </div>
                     </>
                 : <h2>You must be redirected by a room number!</h2>

@@ -4,7 +4,8 @@ import { endpoints } from "../../api/endpoints";
 
 const socket = io.connect(endpoints.socketIO);
 
-const Chatbox = ({ roomNo }) => {
+const Chatbox = ({ roomNo, user }) => {
+    const [introMsg, setIntroMsg] = useState(false);
     const [chatMessages, setChatMessages] = useState([]);
     const [chatBoxText, setChatBoxText] = useState("");
     const messagesEndRef = useRef(null);
@@ -14,12 +15,30 @@ const Chatbox = ({ roomNo }) => {
     };
 
     useEffect(() => {
-        socket.emit("join", roomNo);
+        socket.emit("join", { roomNo, user });
         socket.on("chat_new_message", ({ message }) => {
             setChatMessages((prevMessages) => [
                 ...prevMessages,
                 {
                     type: "receive",
+                    text: message,
+                },
+            ]);
+        });
+        socket.on("chat_join", ({ message }) => {
+            setChatMessages((prevMessages) => [
+                ...prevMessages,
+                {
+                    type: "join",
+                    text: message,
+                },
+            ]);
+        });
+        socket.on("user_dc", ({ message }) => {
+            setChatMessages((prevMessages) => [
+                ...prevMessages,
+                {
+                    type: "dc",
                     text: message,
                 },
             ]);
@@ -47,34 +66,6 @@ const Chatbox = ({ roomNo }) => {
     };
 
     return (
-        // <div>
-        // <div
-        //     style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'auto', backgroundColor: '#F7F7F7' }}>
-        //     {
-        //         chatMessages.map(message => {
-        //             if (message.type === 'send') {
-        //                 return (<div style={{ backgroundColor: '#d3f3f5', padding: '10px', borderRadius: '10px', display: 'flex', alignSelf: 'flex-start', marginBottom: '5px' }}>
-        //                         { message.text }
-        //                     </div>)
-        //             } else if (message.type === 'receive') {
-        //                 return (<div style={{ backgroundColor: '#ddf5d3', padding: '10px', borderRadius: '10px', display: 'flex', alignSelf: 'flex-end', marginBottom: '5px' }}>
-        //                         { message.text }
-        //                     </div>)
-        //             }
-        //         })
-        //     }
-        //     <div ref={messagesEndRef}></div>
-        // </div>
-        // <input
-        //     type="text"
-        //     placeholder="Enter your chat text here"
-        //     onChange={(e) => setChatBoxText(e.target.value)}
-        //     onKeyDown={onInputKeydown}
-        //     value={chatBoxText}
-        //     style={{ width: '80%', padding: '5px 10px' }}/>
-        // <button onClick={onMessageSend}>Enter</button>
-        // </div>
-
         <div style={{ width: "100%" }}>
             {/* main wrapper div */}
             <div
@@ -119,6 +110,21 @@ const Chatbox = ({ roomNo }) => {
                                         borderRadius: "10px",
                                         display: "flex",
                                         alignSelf: "flex-end",
+                                        marginBottom: "5px",
+                                    }}
+                                >
+                                    {message.text}
+                                </div>
+                            );
+                        } else if (message.type === "join" || message.type === "dc") {
+                            return (
+                                <div
+                                    style={{
+                                        backgroundColor: "#e3e3e3",
+                                        padding: "10px",
+                                        borderRadius: "10px",
+                                        display: "flex",
+                                        alignSelf: "center",
                                         marginBottom: "5px",
                                     }}
                                 >
