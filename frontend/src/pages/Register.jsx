@@ -63,6 +63,7 @@ class Login extends React.Component {
                 const response = await axios.post(`${endpoints.userService}/login`, loginData);
                 localStorage.setItem("token", response.data.accessToken);
                 localStorage.setItem("id", response.data.id);
+                localStorage.setItem("username", response.data.username);
                 this.props.history.push("/selectquestion");
             }
         } catch (e) {
@@ -126,7 +127,6 @@ class Login extends React.Component {
                                                     })
                                                 }
                                                 required
-                                                autoFocus
                                             />
                                         </Grid>
                                         <Grid item>

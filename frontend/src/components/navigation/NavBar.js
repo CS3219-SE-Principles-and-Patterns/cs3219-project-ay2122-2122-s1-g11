@@ -50,6 +50,7 @@ function NavBar(props) {
         );
         localStorage.removeItem("id");
         localStorage.removeItem("token");
+        localStorage.removeItem("username");
         props.history.push("/");
     };
 
@@ -146,6 +147,7 @@ function NavBar(props) {
                 open={mobileDrawerOpen}
                 selectedItem={selectedTab}
                 onClose={handleMobileDrawerClose}
+                isAuthenticated={props.isAuthenticated}
             />
         </div>
     );
