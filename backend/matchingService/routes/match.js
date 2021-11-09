@@ -4,10 +4,16 @@ const Redis = require("redis");
 const { v4: uuidv4 } = require("uuid");
 const axios = require("axios");
 
-const redisClient = Redis.createClient({
+let redisClient;
+
+if (process.env.NODE_ENV == 'production') {
+  redisClient = Redis.createClient({
     host: process.env.REDIS_HOST || "localhost", // 'docker.for.mac.host.internal' for mac testing
     password: process.env.REDIS_PASSWORD || "",
-});
+  });
+} else {
+  redisClient = Redis.createClient();
+}
 
 const questionEndpoint = process.env.NODE_ENV == "production" ? "question-service.default.svc.cluster.local:3001" : "localhost:3001";
 
