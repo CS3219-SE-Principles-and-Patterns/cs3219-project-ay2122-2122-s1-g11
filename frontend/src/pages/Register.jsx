@@ -127,7 +127,6 @@ class Login extends React.Component {
                                                     })
                                                 }
                                                 required
-                                                autoFocus
                                             />
                                         </Grid>
                                         <Grid item>

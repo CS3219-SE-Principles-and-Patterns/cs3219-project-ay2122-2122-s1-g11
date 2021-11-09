@@ -1,83 +1,136 @@
-import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import { Button, Grid, Typography } from "@material-ui/core";
-import { useLocation } from "react-router-dom";
+import React from "react";
+import { Button, TextField, Grid, Paper, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
 import axios from "axios";
+import { withRouter } from "react-router";
 import { endpoints } from "../api/endpoints";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        "& > *": {
-            margin: theme.spacing(1),
-            width: "40ch",
-        },
+const styles = (theme) => ({
+    loginForm: {
+        justifyContent: "center",
+        minHeight: "90vh",
     },
-    form: {
-        marginTop: "5em",
+    buttonBlock: {
+        width: "100%",
     },
-    button: {
-        marginTop: "1em",
+    loginBackground: {
+        justifyContent: "center",
+        minHeight: "30vh",
+        padding: "50px",
     },
-    message: {
-        marginTop: "0.5em",
-    },
-}));
+    formTitle: {
+        marginBottom: '0.2em'
+    }
+});
 
-export default function ResetPassword(props) {
-    const classes = useStyles();
+class ResetPassword extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { password1: "", password2: "", error: false, message: "" };
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
 
-    const [password1, setPassword1] = useState("");
-    const [password2, setPassword2] = useState("");
-    const [error, setError] = useState(false);
-    const [message, setMessage] = useState("");
-
-    const location = useLocation();
-
-    const handleSubmit = (event) => {
+    async handleSubmit(event) {
         event.preventDefault();
-        setError(false);
-        if (password1 !== password2) {
-            setMessage("Passwords do not match");
-            setError(true);
+        this.setState({ error: false });
+        if (this.state.password1 !== this.state.password2) {
+            this.setState({ message: "Passwords do not match" });
+            this.setState({ error: true });
             return;
         } else {
             axios
-                .put(`${endpoints.userService}/resetPassword${location.search}`, { password: password2 })
+                .put(`${endpoints.userService}/resetPassword${this.props.history.location.search}`, { password: this.state.password2 })
                 .then((response) => {
-                    setMessage(response.data.message);
+                    this.setState({ message: response.data.message });
                 })
                 .catch((error) => {
-                    setError(true);
-                    setMessage(error.response.data.message);
+                    this.setState({ error: true });
+                    this.setState({ message: error.response.data.message });
                 });
         }
     };
 
-    return (
-        <Grid container direction="row" justify="center" spacing={2}>
-            <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
-                <Grid className={classes.form} item>
-                    <TextField onChange={(event) => setPassword1(event.target.value)} required label="Password" name="password1" type="password" />
+    render() {
+        const { classes } = this.props;
+        return (
+            <Grid container spacing={0} justify="center" direction="row">
+                <Grid item>
+                    <Grid
+                        container
+                        direction="column"
+                        justify="center"
+                        spacing={2}
+                        className={classes.loginForm}
+                    >
+                        <Paper
+                            variant="elevation"
+                            elevation={2}
+                            className={classes.loginBackground}
+                        >
+                            <Grid item>
+                                <Typography className={classes.formTitle} component="h1" variant="h5">
+                                    Reset Password
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <form onSubmit={this.handleSubmit}>
+                                    <Grid container direction="column" spacing={2}>
+                                        <Grid item>
+                                            <TextField
+                                                type="password"
+                                                placeholder="Password"
+                                                fullWidth
+                                                name="password1"
+                                                variant="outlined"
+                                                value={this.state.password1}
+                                                onChange={(event) =>
+                                                    this.setState({
+                                                        [event.target.name]: event.target.value,
+                                                    })
+                                                }
+                                                required
+                                                autoFocus
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                type="password"
+                                                placeholder="Confirm Password"
+                                                fullWidth
+                                                name="password2"
+                                                variant="outlined"
+                                                value={this.state.password2}
+                                                onChange={(event) =>
+                                                    this.setState({
+                                                        [event.target.name]: event.target.value,
+                                                    })
+                                                }
+                                                required
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <Typography color={this.state.error ? "error" : "textSecondary"}>{this.state.message}</Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                type="submit"
+                                                className={classes.buttonBlock}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </form>
+                            </Grid>
+                        </Paper>
+                    </Grid>
                 </Grid>
-                <Grid className={classes.form} item>
-                    <TextField
-                        onChange={(event) => setPassword2(event.target.value)}
-                        required
-                        label="Repeat Password"
-                        name="password2"
-                        type="password"
-                    />
-                </Grid>
-                <Grid className={classes.button} item>
-                    <Button onClick={handleSubmit} variant="contained">
-                        Submit
-                    </Button>
-                </Grid>
-                <Grid className={classes.message} item>
-                    <Typography color={error ? "error" : "textSecondary"}>{message}</Typography>
-                </Grid>
-            </form>
-        </Grid>
-    );
+            </Grid>
+        );
+    }
 }
+export default withStyles(styles)(withRouter(ResetPassword));
+
+
