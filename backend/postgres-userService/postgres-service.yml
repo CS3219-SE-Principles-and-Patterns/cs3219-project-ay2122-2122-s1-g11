@@ -5,7 +5,7 @@ metadata:
   labels:
     app: postgres-user
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
    - port: 5432
   selector:

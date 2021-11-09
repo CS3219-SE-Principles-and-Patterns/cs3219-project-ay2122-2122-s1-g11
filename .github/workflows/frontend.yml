@@ -1,10 +1,12 @@
 name: Frontend CI/CD Workflow
 
 on:
-  push:
-    paths:
-    - 'frontend/**'
-    - '.github/workflows/frontend.yml'
+    push:
+        branches:
+        - master
+        paths:
+        - 'frontend/**'
+        - '.github/workflows/frontend.yml'
 
 jobs:
   deploy: 
@@ -35,7 +37,18 @@ jobs:
       run: |
         # Build a docker container and push it to ECR
         cd frontend
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG.${GITHUB_RUN_NUMBER} .
         echo "Pushing image to ECR..."
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG.${GITHUB_RUN_NUMBER}
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG.${GITHUB_RUN_NUMBER}"
+
+    - name: Deploy to AWS EKS                                                                         
+      uses: kodermax/kubectl-aws-eks@master                                                                         
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        ECR_REGISTRY: 852678264376.dkr.ecr.ap-southeast-1.amazonaws.com
+        ECR_REPOSITORY: cs3219
+        IMAGE_TAG: frontend                                                                                                       
+        RELEASE_IMAGE: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG.${GITHUB_RUN_NUMBER}
+      with:                                                                                                         
+        args: set image deployment/frontend-deployment frontend=${{ env.RELEASE_IMAGE }} 

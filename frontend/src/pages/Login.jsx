@@ -44,6 +44,7 @@ class Login extends React.Component {
             // successful login
             localStorage.setItem("token", response.data.accessToken);
             localStorage.setItem("id", response.data.id);
+            localStorage.setItem("username", response.data.username);
             this.props.history.push("/selectquestion");
         } catch (e) {
             this.setState({ error: true, errorMessage: e.response.data.message });

@@ -1,4 +1,4 @@
-name: Question Service CI/CD Workflow [Master]
+name: Question Service CI/CD Workflow [PR]
 
 on:
     pull_request:
