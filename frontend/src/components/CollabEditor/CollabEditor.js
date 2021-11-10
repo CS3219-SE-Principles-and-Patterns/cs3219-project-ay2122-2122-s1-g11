@@ -42,7 +42,7 @@ const CollabEditor = ({ id, user, style }) => {
 
                 awareness.setLocalStateField("user", {
                     name: user,
-                    color: color,
+                    color: '#a11546',
                 });
 
                 const getBinding = new CodemirrorBinding(yText, EditorRef, awareness, {
