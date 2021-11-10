@@ -83,7 +83,7 @@ npm start
 The Frontend runs on port 3000.
 
 ## Accessing Kubernetes Cluster
-_Note: The following instructions is specific to running the services on our own AWS cluster._
+_Note: The following instructions are specific to running the services on our own AWS cluster._
 
 ### Connecting to AWS EKS Cluster with kubectl
 
