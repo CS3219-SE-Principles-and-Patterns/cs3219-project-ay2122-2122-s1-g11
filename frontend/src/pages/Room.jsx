@@ -57,9 +57,10 @@ const Room = () => {
                             style={{
                                 display: "flex",
                                 flex: 1,
-                            }}
-                        >
-                            <Chatbox roomNo={getRoomId()} />
+                            }}>
+                                <Chatbox 
+                                    roomNo={getRoomId()}
+                                    user={getUserId()} />
                         </div>
                     </>
                 ) : (
