@@ -81,3 +81,72 @@ Enter into the terminal in the base directory of the Collaboration Service: `/fr
 npm start
 ```
 The Frontend runs on port 3000.
+
+## Accessing Kubernetes Cluster
+_Note: The following instructions is specific to running the services on our own AWS cluster._
+
+### Connecting to AWS EKS Cluster with kubectl
+
+#### AWS
+1. Install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
+2. Once installed, run `aws --version` to verify that the installation has been successful
+3. Then, configure your access identity for AWS with `aws configure`. The AWS Access Key ID and AWS Secret Access Key will be the one given to you.
+```
+$ aws configure
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: ap-southeast-1
+Default output format [None]: json
+```
+4. Run `aws sts get-caller-identity` to verify your AWS Account
+
+#### Kubernetes
+To add your AWS identity to kubeconfig, run the following:
+```
+aws eks --region ap-southeast-1 update-kubeconfig --name cs3219
+```
+You should see: 
+```
+Added new context arn:aws:eks:ap-southeast-1:852678264376:cluster/cs3219 to /Users/XXXX/.kube/config
+```
+
+Now, get your kubectl contexts with: `kubectl config get-contexts`, you should see the AWS cluster with the name, `arn:aws:eks:ap-southeast-1:852678264376:cluster/cs3219` (or similar)
+
+Then, switch the context to use our CS3219 cluster:
+```
+kubectl config use-context arn:aws:eks:ap-southeast-1:852678264376:cluster/cs3219
+```
+
+You should be successfully connected to the CS3219 cluster.
+
+To test, run: `kubectl get all`. You should see all our pods/services/deployments.
+
+### Kubernetes Deployment
+All our 5 microservices (1 frontend and 4 backend) are deployed onto Kubernetes. Their respective deployment and service files could be found under the 'k8s' folder under their respective microservice folder.
+
+An exhaustive list is as follows:
+| Microservice      | Kubernetes File Location |
+| ----------- | ----------- |
+| Frontend | ./frontend/k8s/deploy.yml |
+| Frontend Ingress | ./frontend/k8s/deploy.yml |
+| Backend Ingress (API Gateway) | ./backend/k8s/api-ingress.yml |
+| User Service      | ./backend/userService/k8s/deploy.yml       |
+| Question Service   | ./backend/questionService/k8s/deploy.yml        |
+| Matching Service | ./backend/matchingService/k8s/deploy.yml |
+| Collaboration Service | ./backend/collaborationService/k8s/deploy.yml |
+
+### Kubernetes Horizontal Pod Autoscaler (HPA)
+The HPA is invoked through the kubectl CLI with the following command:
+```
+kubectl autoscale deployment {deployment-name} --cpu-percent=50 --min=1 --max=5
+```
+
+where `{deployment-name}` can be replaced with the following:
+| Microservice | Deployment Name |
+|--------------|-----------------|
+| Frontend | frontend-deployment |
+| User Service | user-deployment |
+| Question Service | question-deployment | 
+| Matching Service | matching-deployment | 
+| Collaboration Service | collab-deployment |
+
